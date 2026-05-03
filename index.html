@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0d0b;
+    --surface: #1a1714;
+    --surface2: #222019;
+    --border: #2e2a26;
+    --red: #c0392b;
+    --orange: #e07b39;
+    --gold: #c9943a;
+    --cream: #f0e6d3;
+    --muted: #7a6f63;
+    --text: #e8ddd0;
+    --green: #4a7c59;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  header {
+    padding: 48px 24px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(192,57,43,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 7vw, 56px);
+    color: var(--cream);
+    font-weight: 700;
+  }
+  header p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 400px;
+  }
+
+  main { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .recipe-grid { display: grid; gap: 16px; }
+
+  .recipe-card {
+    display: block;
+    text-decoration: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .recipe-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 100% 0%, rgba(224,123,57,0.06), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .recipe-card:hover { border-color: var(--orange); background: var(--surface2); }
+  .recipe-card:hover::before { opacity: 1; }
+
+  .card-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .card-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .card-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .card-macro {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .card-macro span { color: var(--text); font-weight: 500; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 3px 8px;
+  }
+  .card-arrow {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    color: var(--muted);
+    font-size: 18px;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .recipe-card:hover .card-arrow { color: var(--orange); transform: translateX(3px); }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-eyebrow">Santosh's Kitchen</div>
+  <h1>Recipes</h1>
+  <p>Meal prepped. High protein. Built to keep you out of DoorDash.</p>
+</header>
+<main>
+  <div class="section-label">All Recipes</div>
+  <div class="recipe-grid" id="recipe-grid">
+    <div style="color:var(--muted);font-size:13px">Loading...</div>
+  </div>
+</main>
+<script>
+  const recipes = [
+    {
+      id: 'korean-chicken-stew',
+      title: 'Korean Chicken Stew',
+      subtitle: 'with Kimchi & Lime',
+      description: 'A spicy, savory Korean-inspired chicken and vegetable stew over cold rice — built for meal prep with kimchi, fried eggs, and a lime finish.',
+      tags: ['Instant Pot', 'Korean', 'Spicy', 'Meal Prep'],
+      macros: { calories: 645, protein: 53 }
+    },
+    {
+      id: 'smoky-chipotle-korean-chicken-stew',
+      title: 'Smoky Chipotle Korean Chicken Stew',
+      subtitle: 'Korean-Mexican Fusion',
+      description: 'A smoky Korean-Mexican fusion braise with chipotle, gochujang, fire roasted tomatoes, and daikon — finished with lime and served as fried rice.',
+      tags: ['Instant Pot', 'Fusion', 'Smoky', 'Meal Prep'],
+      macros: { calories: 640, protein: 54 }
+    }
+  ];
+
+  const grid = document.getElementById('recipe-grid');
+  grid.innerHTML = recipes.map(r => `
+    <a class="recipe-card" href="recipe.html?id=${r.id}">
+      <div class="card-arrow">→</div>
+      <div class="card-eyebrow">Meal Prep · ${r.macros.protein}g protein</div>
+      <div class="card-title">${r.title}</div>
+      <div class="card-subtitle">${r.subtitle}</div>
+      <div class="card-desc">${r.description}</div>
+      <div class="card-meta">
+        <span class="card-macro">Calories <span>${r.macros.calories}</span></span>
+        <span class="card-macro">Protein <span>${r.macros.protein}g</span></span>
+      </div>
+      <div class="card-tags">${r.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>
+    </a>
+  `).join('');
+</script>
+</body>
+</html>

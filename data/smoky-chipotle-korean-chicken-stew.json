@@ -1,0 +1,163 @@
+{
+  "id": "smoky-chipotle-korean-chicken-stew",
+  "title": "Smoky Chipotle Korean Chicken Stew",
+  "subtitle": "Korean-Mexican Fusion",
+  "description": "A smoky Korean-Mexican fusion braise with chipotle, gochujang, fire roasted tomatoes, and daikon — finished with lime and served as fried rice with a cracked egg.",
+  "tags": ["Instant Pot", "Fusion", "Smoky", "Meal Prep", "High Protein"],
+  "servings": 3,
+  "macros": {
+    "calories": 640,
+    "protein": 54,
+    "carbs": 55,
+    "fat": 21,
+    "fiber": 5
+  },
+  "ingredientGroups": [
+    {
+      "label": "Protein",
+      "ingredients": [
+        { "amount": "2.3", "unit": "lb", "name": "boneless skinless chicken thighs, cut into chunks", "base": 2.3 }
+      ]
+    },
+    {
+      "label": "Rice",
+      "ingredients": [
+        { "amount": "1", "unit": "cup", "name": "uncooked white rice (yields ~3 cups cooked)", "base": 1, "note": "cook night before" }
+      ]
+    },
+    {
+      "label": "Vegetables",
+      "ingredients": [
+        { "amount": "1", "unit": "", "name": "medium daikon radish, peeled and cubed", "base": 1 },
+        { "amount": "2", "unit": "", "name": "large carrots, chopped", "base": 2 },
+        { "amount": "1", "unit": "", "name": "Spanish onion, diced", "base": 1 },
+        { "amount": "7", "unit": "oz", "name": "fire roasted diced tomatoes (half a 14oz can)", "base": 7 }
+      ]
+    },
+    {
+      "label": "Aromatics",
+      "ingredients": [
+        { "amount": "4", "unit": "cloves", "name": "garlic, minced", "base": 4, "note": "for sautéing" },
+        { "amount": "4", "unit": "cloves", "name": "garlic, minced", "base": 4, "note": "for finishing" },
+        { "amount": "1", "unit": "inch", "name": "fresh ginger, grated", "base": 1 }
+      ]
+    },
+    {
+      "label": "Sauce & Spice",
+      "ingredients": [
+        { "amount": "2", "unit": "", "name": "chipotles in adobo, minced", "base": 2 },
+        { "amount": "1", "unit": "tsp", "name": "adobo sauce (from the can)", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "gochujang", "base": 1 },
+        { "amount": "1", "unit": "tsp", "name": "smoked paprika", "base": 1 },
+        { "amount": "½", "unit": "tsp", "name": "cumin", "base": 0.5 },
+        { "amount": "5", "unit": "tbsp", "name": "soy sauce", "base": 5 },
+        { "amount": "1", "unit": "tbsp", "name": "Worcestershire sauce", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "granulated sugar", "base": 1 },
+        { "amount": "½", "unit": "cup", "name": "chicken broth or water", "base": 0.5 }
+      ]
+    },
+    {
+      "label": "Finishing",
+      "ingredients": [
+        { "amount": "½", "unit": "tbsp", "name": "sesame oil", "base": 0.5, "note": "for sautéing" },
+        { "amount": "½", "unit": "tbsp", "name": "sesame oil", "base": 0.5, "note": "for finishing" },
+        { "amount": "1", "unit": "", "name": "lime, zest + juice", "base": 1 }
+      ]
+    },
+    {
+      "label": "Kimchi & Toppings",
+      "ingredients": [
+        { "amount": "½", "unit": "cup", "name": "kimchi, chopped", "base": 0.5, "note": "into stew" },
+        { "amount": "3", "unit": "tbsp", "name": "fresh kimchi", "base": 3, "note": "for topping" },
+        { "amount": "2", "unit": "", "name": "scallions, sliced", "base": 2 },
+        { "amount": "4", "unit": "", "name": "eggs, cracked into pan at serving time", "base": 4 }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Cook and refrigerate rice",
+      "text": "Cook 1 cup of white rice according to package instructions. Spread out on a sheet pan to cool completely, then refrigerate — ideally overnight.",
+      "bullets": [],
+      "note": "Cold, dry rice is essential for the fried rice step — it fries without going mushy."
+    },
+    {
+      "title": "Bloom aromatics and spices",
+      "text": "Turn the Instant Pot to Sauté and heat sesame oil (½ tbsp). Add:",
+      "bullets": [
+        "1 Spanish onion, diced",
+        "4 garlic cloves, minced",
+        "1 inch fresh ginger, grated",
+        "1 tsp smoked paprika",
+        "½ tsp cumin"
+      ],
+      "note": "Cook about 2 minutes until fragrant and spices have bloomed in the oil."
+    },
+    {
+      "title": "Sear chicken",
+      "text": "Add the chicken thighs (2.3 lb) and sear for 2–3 minutes, stirring a few times.",
+      "bullets": [],
+      "note": ""
+    },
+    {
+      "title": "Build the stew",
+      "text": "Pour in chicken broth (½ cup) and scrape up anything stuck on the bottom. Stir in:",
+      "bullets": [
+        "1 medium daikon, cubed",
+        "2 large carrots, chopped",
+        "7 oz fire roasted diced tomatoes",
+        "2 chipotles in adobo, minced",
+        "1 tsp adobo sauce",
+        "1 tbsp gochujang",
+        "5 tbsp soy sauce",
+        "1 tbsp Worcestershire sauce",
+        "1 tbsp sugar",
+        "½ cup chopped kimchi"
+      ],
+      "note": "Stir everything to combine."
+    },
+    {
+      "title": "Pressure cook",
+      "text": "Lock the lid and pressure cook on High for 8 minutes. Let pressure naturally release for 5 minutes, then quick release the rest.",
+      "bullets": [],
+      "note": ""
+    },
+    {
+      "title": "Reduce the sauce",
+      "text": "Turn Sauté back on and simmer uncovered for 7–9 minutes, stirring occasionally. The fire roasted tomatoes help the sauce thicken faster — watch for a thick, glossy consistency.",
+      "bullets": [],
+      "note": ""
+    },
+    {
+      "title": "The finisher",
+      "text": "Turn the Instant Pot completely off. While still piping hot, stir in:",
+      "bullets": [
+        "4 garlic cloves, minced",
+        "½ tbsp sesame oil",
+        "Zest and juice of 1 lime"
+      ],
+      "note": "The lime is essential here — the smoky braise needs that acid to cut through."
+    },
+    {
+      "title": "Pack the containers",
+      "text": "Divide cold rice across 3 containers. Spoon stew equally over the rice. Top each with:",
+      "bullets": [
+        "Sliced scallions",
+        "1 tbsp fresh kimchi"
+      ],
+      "note": "Seal immediately and refrigerate or freeze."
+    },
+    {
+      "title": "Fried rice at serving time",
+      "text": "Heat a pan on medium-high with a little neutral oil. Add one portion of cold rice and stew together and press down slightly. Fry until the bottom starts to crisp — about 3 minutes. Make a well in the center, crack in 1–2 eggs, let them set halfway, then fold everything together loosely. Top with fresh kimchi and serve immediately.",
+      "bullets": [],
+      "note": "Don't microwave this one — the fried rice method is the move."
+    }
+  ],
+  "notes": [
+    { "title": "Chipotle heat level", "body": "2 chipotles is medium-smoky. Go 1 for mild, 3 for aggressive. The adobo sauce carries a lot of flavor on its own — don't skip it." },
+    { "title": "Fire roasted tomatoes", "body": "Just charred canned tomatoes — no oil, totally different from sun dried. They melt into the sauce adding body, acidity, and charred sweetness." },
+    { "title": "The fried rice move", "body": "Heat pan on medium-high, add oil, add cold rice and stew together and press down. Let the bottom crisp for 3 minutes. Make a well, crack in eggs, let them set halfway, then fold everything together." },
+    { "title": "Storage", "body": "Fridge up to 4 days, freezer up to 3 months. The fried rice step happens fresh at serving time — don't pack it already fried." }
+  ]
+}

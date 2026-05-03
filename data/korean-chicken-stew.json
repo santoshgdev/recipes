@@ -1,0 +1,157 @@
+{
+  "id": "korean-chicken-stew",
+  "title": "Korean Chicken Stew",
+  "subtitle": "with Kimchi & Lime",
+  "description": "A spicy, savory Korean-inspired chicken and vegetable stew over cold rice — built for meal prep with kimchi, fried eggs, and a lime finish.",
+  "tags": ["Instant Pot", "Korean", "Spicy", "Meal Prep", "High Protein"],
+  "servings": 3,
+  "macros": {
+    "calories": 645,
+    "protein": 53,
+    "carbs": 61,
+    "fat": 20,
+    "fiber": 4
+  },
+  "ingredientGroups": [
+    {
+      "label": "Protein",
+      "ingredients": [
+        { "amount": "2.3", "unit": "lb", "name": "boneless skinless chicken thighs, cut into chunks", "base": 2.3 }
+      ]
+    },
+    {
+      "label": "Rice",
+      "ingredients": [
+        { "amount": "1", "unit": "cup", "name": "uncooked white rice (yields ~3 cups cooked)", "base": 1, "note": "cook night before" }
+      ]
+    },
+    {
+      "label": "Vegetables",
+      "ingredients": [
+        { "amount": "1", "unit": "", "name": "medium daikon radish, peeled and cubed", "base": 1 },
+        { "amount": "2", "unit": "", "name": "large carrots, chopped", "base": 2 },
+        { "amount": "1", "unit": "", "name": "Spanish onion, diced", "base": 1 },
+        { "amount": "1", "unit": "", "name": "jalapeño or serrano pepper, sliced into rings", "base": 1 }
+      ]
+    },
+    {
+      "label": "Aromatics",
+      "ingredients": [
+        { "amount": "4", "unit": "cloves", "name": "garlic, minced", "base": 4, "note": "for sautéing" },
+        { "amount": "4", "unit": "cloves", "name": "garlic, minced", "base": 4, "note": "for finishing" },
+        { "amount": "1", "unit": "inch", "name": "fresh ginger, grated", "base": 1 }
+      ]
+    },
+    {
+      "label": "Sauce & Spice",
+      "ingredients": [
+        { "amount": "2", "unit": "tbsp", "name": "gochujang", "base": 2, "note": "reduced for kimchi" },
+        { "amount": "2", "unit": "tbsp", "name": "fine gochugaru", "base": 2 },
+        { "amount": "5", "unit": "tbsp", "name": "soy sauce", "base": 5 },
+        { "amount": "2.5", "unit": "tsp", "name": "fish sauce", "base": 2.5 },
+        { "amount": "1", "unit": "tbsp", "name": "granulated sugar", "base": 1 },
+        { "amount": "½", "unit": "cup", "name": "chicken broth or water", "base": 0.5 }
+      ]
+    },
+    {
+      "label": "Finishing",
+      "ingredients": [
+        { "amount": "½", "unit": "tbsp", "name": "sesame oil", "base": 0.5, "note": "for sautéing" },
+        { "amount": "½", "unit": "tbsp", "name": "sesame oil", "base": 0.5, "note": "for finishing" },
+        { "amount": "1", "unit": "", "name": "lime, zest + juice", "base": 1 }
+      ]
+    },
+    {
+      "label": "Kimchi & Toppings",
+      "ingredients": [
+        { "amount": "½", "unit": "cup", "name": "kimchi, chopped", "base": 0.5, "note": "into stew" },
+        { "amount": "3", "unit": "tbsp", "name": "fresh kimchi", "base": 3, "note": "for topping" },
+        { "amount": "2", "unit": "", "name": "scallions, sliced", "base": 2 },
+        { "amount": "3", "unit": "", "name": "eggs, fried fresh at serving time", "base": 3 }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Cook and refrigerate rice",
+      "text": "Cook 1 cup of white rice according to package instructions. Spread out and let cool completely, then refrigerate — ideally overnight.",
+      "bullets": [],
+      "note": "Cold, dry rice is essential — it reheats better and doesn't go mushy."
+    },
+    {
+      "title": "Sauté aromatics",
+      "text": "Turn the Instant Pot to Sauté and heat sesame oil (½ tbsp). Add:",
+      "bullets": [
+        "1 Spanish onion, diced",
+        "4 garlic cloves, minced",
+        "1 inch fresh ginger, grated",
+        "2 tbsp fine gochugaru"
+      ],
+      "note": "Cook about 2 minutes until intensely fragrant."
+    },
+    {
+      "title": "Sear chicken",
+      "text": "Add the chicken thighs (2.3 lb) and sear for 2–3 minutes, stirring a few times.",
+      "bullets": [],
+      "note": ""
+    },
+    {
+      "title": "Build the stew",
+      "text": "Pour in chicken broth (½ cup) and scrape up anything stuck on the bottom. Stir in:",
+      "bullets": [
+        "1 medium daikon, cubed",
+        "2 large carrots, chopped",
+        "1 jalapeño, sliced into rings",
+        "2 tbsp gochujang",
+        "5 tbsp soy sauce",
+        "2.5 tsp fish sauce",
+        "1 tbsp sugar",
+        "½ cup chopped kimchi"
+      ],
+      "note": "Stir everything to combine."
+    },
+    {
+      "title": "Pressure cook",
+      "text": "Lock the lid and pressure cook on High for 8 minutes. Let pressure naturally release for 5 minutes, then quick release the rest.",
+      "bullets": [],
+      "note": ""
+    },
+    {
+      "title": "Reduce the sauce",
+      "text": "Turn Sauté back on and simmer uncovered for 7–9 minutes, stirring occasionally, until the sauce reduces into a thick glaze.",
+      "bullets": [],
+      "note": "With kimchi adding extra liquid, give it the full 9 minutes if needed."
+    },
+    {
+      "title": "The finisher",
+      "text": "Turn the Instant Pot completely off. While still piping hot, stir in:",
+      "bullets": [
+        "4 garlic cloves, minced",
+        "½ tbsp sesame oil",
+        "Zest and juice of 1 lime"
+      ],
+      "note": "Taste and adjust — with kimchi in the mix you may not need the full lime."
+    },
+    {
+      "title": "Pack the containers",
+      "text": "Divide cold rice across 3 containers. Spoon stew equally over the rice. Top each with:",
+      "bullets": [
+        "Sliced scallions",
+        "1 tbsp fresh kimchi"
+      ],
+      "note": "Seal immediately and refrigerate or freeze."
+    },
+    {
+      "title": "Reheat & fry egg at serving time",
+      "text": "Reheat the container in the microwave. While it heats, fry 1 egg per bowl to your liking — runny yolk is best, it breaks over the stew like a sauce. Slide the egg on top and serve immediately.",
+      "bullets": [],
+      "note": "Don't pack the egg in — always fry it fresh."
+    }
+  ],
+  "notes": [
+    { "title": "Kimchi", "body": "Split it: half goes into the braise for depth, half stays fresh as a topping for brightness and crunch." },
+    { "title": "Lime", "body": "Goes in off-heat with the finishing garlic. Start with half a lime — the kimchi already brings acidity." },
+    { "title": "Storage", "body": "Fridge up to 4 days, freezer up to 3 months. Always fry the egg fresh at serving time." },
+    { "title": "Heat", "body": "Dial the jalapeño and gochugaru up or down to preference." }
+  ]
+}

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0d0b; --surface: #1a1714; --surface2: #222019;
+    --border: #2e2a26; --red: #c0392b; --orange: #e07b39;
+    --gold: #c9943a; --cream: #f0e6d3; --muted: #7a6f63;
+    --text: #e8ddd0; --green: #4a7c59;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  .back-bar {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .back-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--orange); }
+
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(192,57,43,0.12), transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(224,123,57,0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 5vw, 44px); font-weight: 700; color: var(--cream); line-height: 1.1; }
+  .hero-subtitle { font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(16px, 3vw, 22px); color: var(--orange); margin-top: 4px; }
+  .hero-desc { font-size: 14px; color: var(--muted); margin-top: 12px; max-width: 520px; line-height: 1.7; }
+  .hero-tags { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; border: 1px solid var(--border); color: var(--muted); padding: 4px 10px; }
+
+  .macros-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 20px 24px; }
+  .macros-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .macros-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .macro-cell { background: var(--surface); padding: 14px 6px; text-align: center; }
+  .macro-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--cream); line-height: 1; margin-bottom: 4px; }
+  .macro-value sup { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); }
+  .macro-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .macro-cell.highlight .macro-value { color: var(--orange); }
+
+  .servings-bar { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 14px; }
+  .servings-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .servings-ctrl { display: flex; align-items: center; border: 1px solid var(--border); }
+  .s-btn { background: none; border: none; color: var(--text); width: 32px; height: 32px; font-size: 18px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; transition: background 0.15s; }
+  .s-btn:hover { background: var(--surface2); }
+  .s-val { font-family: 'Playfair Display', serif; font-size: 18px; min-width: 44px; text-align: center; border-left: 1px solid var(--border); border-right: 1px solid var(--border); height: 32px; display: flex; align-items: center; justify-content: center; color: var(--cream); }
+  .servings-note { font-size: 12px; color: var(--muted); }
+
+  .tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 24px; }
+  .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 13px 14px; cursor: pointer; transition: all 0.2s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  .content { max-width: 680px; margin: 0 auto; padding: 32px 24px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* INGREDIENTS */
+  .ing-group { margin-bottom: 28px; }
+  .ing-group-title { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .ing-row { display: flex; align-items: baseline; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(46,42,38,0.5); font-size: 14px; }
+  .ing-row:last-child { border-bottom: none; }
+  .ing-amt { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--orange); min-width: 64px; text-align: right; flex-shrink: 0; }
+  .ing-unit { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); min-width: 28px; flex-shrink: 0; }
+  .ing-name { color: var(--text); flex: 1; }
+  .ing-note { font-size: 11px; color: var(--muted); font-style: italic; flex-shrink: 0; }
+
+  /* STEPS */
+  .step { display: grid; grid-template-columns: 42px 1fr; position: relative; }
+  .step-left { display: flex; flex-direction: column; align-items: center; padding-top: 2px; }
+  .step-num { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); cursor: pointer; background: var(--surface); z-index: 1; transition: all 0.2s; flex-shrink: 0; }
+  .step.done .step-num { background: var(--green); border-color: var(--green); color: white; }
+  .step-line { width: 1px; background: var(--border); flex: 1; margin: 6px 0; min-height: 16px; }
+  .step:last-child .step-line { display: none; }
+  .step-body { padding: 0 0 28px 16px; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--cream); margin-bottom: 8px; line-height: 1.2; cursor: pointer; }
+  .step.done .step-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border); }
+  .step-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 6px; }
+  .step-bullets { list-style: none; margin: 8px 0; }
+  .step-bullets li { font-size: 14px; color: var(--text); padding: 5px 0 5px 18px; position: relative; line-height: 1.5; border-bottom: 1px solid rgba(46,42,38,0.4); }
+  .step-bullets li:last-child { border-bottom: none; }
+  .step-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--orange); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .step-note { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 8px; padding: 8px 12px; border-left: 2px solid var(--border); }
+
+  /* NOTES */
+  .note-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 16px 20px; margin-bottom: 12px; }
+  .note-card-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .note-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .note-card strong { color: var(--text); }
+
+  @media (max-width: 480px) {
+    .macros-grid { grid-template-columns: repeat(3, 1fr); }
+    .content { padding: 24px 16px; }
+    .tab-btn { padding: 12px 10px; font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <a class="back-link" href="index.html">← All Recipes</a>
+</div>
+
+<div class="hero" id="hero">
+  <div class="hero-eyebrow" id="eyebrow">Loading...</div>
+  <h1 id="title"></h1>
+  <div class="hero-subtitle" id="subtitle"></div>
+  <div class="hero-desc" id="desc"></div>
+  <div class="hero-tags" id="tags"></div>
+</div>
+
+<div class="macros-bar" id="macros-bar" style="display:none">
+  <div class="macros-label">Nutrition per serving</div>
+  <div class="macros-grid" id="macros-grid"></div>
+</div>
+
+<div class="servings-bar">
+  <span class="servings-label">Servings</span>
+  <div class="servings-ctrl">
+    <button class="s-btn" onclick="changeServings(-1)">−</button>
+    <div class="s-val" id="s-val">3</div>
+    <button class="s-btn" onclick="changeServings(1)">+</button>
+  </div>
+  <span class="servings-note" id="s-note">3 containers</span>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('ingredients', this)">Ingredients</button>
+  <button class="tab-btn" onclick="showTab('steps', this)">Steps</button>
+  <button class="tab-btn" onclick="showTab('notes', this)">Notes</button>
+</div>
+
+<div class="content">
+  <div id="panel-ingredients" class="panel active"></div>
+  <div id="panel-steps" class="panel"></div>
+  <div id="panel-notes" class="panel"></div>
+</div>
+
+<script>
+  let recipe = null;
+  let servings = 3;
+  let baseServings = 3;
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  if (!id) {
+    window.location.href = 'index.html';
+  }
+
+  fetch(`data/${id}.json`)
+    .then(r => r.json())
+    .then(data => {
+      recipe = data;
+      servings = data.servings;
+      baseServings = data.servings;
+      render();
+    })
+    .catch(() => {
+      document.getElementById('title').textContent = 'Recipe not found';
+    });
+
+  function fmt(val) {
+    if (typeof val === 'string') return val;
+    if (val === Math.round(val)) return val.toString();
+    const fracs = [[0.25,'¼'],[0.333,'⅓'],[0.5,'½'],[0.667,'⅔'],[0.75,'¾']];
+    const whole = Math.floor(val);
+    const frac = val - whole;
+    for (const [f, sym] of fracs) {
+      if (Math.abs(frac - f) < 0.05) return (whole > 0 ? whole : '') + sym;
+    }
+    return Math.round(val * 10) / 10;
+  }
+
+  function render() {
+    document.title = recipe.title;
+    document.getElementById('eyebrow').textContent = `Meal Prep · ${recipe.servings} Containers`;
+    document.getElementById('title').textContent = recipe.title;
+    document.getElementById('subtitle').textContent = recipe.subtitle;
+    document.getElementById('desc').textContent = recipe.description;
+    document.getElementById('tags').innerHTML = recipe.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+    // Macros
+    const m = recipe.macros;
+    document.getElementById('macros-bar').style.display = '';
+    document.getElementById('macros-grid').innerHTML = `
+      <div class="macro-cell"><div class="macro-value">${m.calories}<sup>kcal</sup></div><div class="macro-label">Calories</div></div>
+      <div class="macro-cell highlight"><div class="macro-value">${m.protein}<sup>g</sup></div><div class="macro-label">Protein</div></div>
+      <div class="macro-cell"><div class="macro-value">${m.carbs}<sup>g</sup></div><div class="macro-label">Carbs</div></div>
+      <div class="macro-cell"><div class="macro-value">${m.fat}<sup>g</sup></div><div class="macro-label">Fat</div></div>
+      <div class="macro-cell"><div class="macro-value">${m.fiber}<sup>g</sup></div><div class="macro-label">Fiber</div></div>
+    `;
+
+    renderIngredients();
+    renderSteps();
+    renderNotes();
+    updateServingsDisplay();
+  }
+
+  function renderIngredients() {
+    const ratio = servings / baseServings;
+    document.getElementById('panel-ingredients').innerHTML = recipe.ingredientGroups.map(g => `
+      <div class="ing-group">
+        <div class="ing-group-title">${g.label}</div>
+        ${g.ingredients.map(i => `
+          <div class="ing-row">
+            <span class="ing-amt" data-base="${i.base}">${fmt(i.base * ratio)}</span>
+            <span class="ing-unit">${i.unit || ''}</span>
+            <span class="ing-name">${i.name}</span>
+            ${i.note ? `<span class="ing-note">${i.note}</span>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  function renderSteps() {
+    document.getElementById('panel-steps').innerHTML = recipe.steps.map((s, i) => `
+      <div class="step" id="step-${i+1}">
+        <div class="step-left">
+          <div class="step-num" onclick="toggleStep(${i+1})">${i+1}</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-body">
+          <div class="step-title" onclick="toggleStep(${i+1})">${s.title}</div>
+          ${s.text ? `<p class="step-text">${s.text}</p>` : ''}
+          ${s.bullets && s.bullets.length ? `
+            <ul class="step-bullets">
+              ${s.bullets.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+          ` : ''}
+          ${s.note ? `<div class="step-note">${s.note}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderNotes() {
+    document.getElementById('panel-notes').innerHTML = recipe.notes.map(n => `
+      <div class="note-card">
+        <div class="note-card-title">${n.title}</div>
+        <p>${n.body}</p>
+      </div>
+    `).join('');
+  }
+
+  function updateServingsDisplay() {
+    document.getElementById('s-val').textContent = servings;
+    document.getElementById('s-note').textContent = `${servings} container${servings !== 1 ? 's' : ''}`;
+  }
+
+  function changeServings(delta) {
+    servings = Math.max(1, servings + delta);
+    updateServingsDisplay();
+    renderIngredients();
+  }
+
+  function showTab(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggleStep(n) {
+    document.getElementById('step-' + n).classList.toggle('done');
+  }
+</script>
+</body>
+</html>
