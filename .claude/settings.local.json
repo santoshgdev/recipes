@@ -6,7 +6,8 @@
       "Bash(bash -c 'if git status --short | grep -q .; then RECIPE=$\\(git status --short | grep \"data/\" | grep \".json\" | head -1 | sed \"s/.*data\\\\///\" | sed \"s/\\\\.json//\"\\); MSG=\"${RECIPE:-update recipes}\"; echo \"Would commit: add $MSG\"; else echo \"Nothing to commit\"; fi')",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git commit *)"
     ]
   }
 }
