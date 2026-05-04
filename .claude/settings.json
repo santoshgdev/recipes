@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "cd \"C:/Users/sg/Documents/GitHub/santoshgdev/recipes\" && if git status --short | grep -q .; then RECIPE=$(git status --short | grep 'data/' | grep '.json' | head -1 | sed 's/.*data\\///' | sed 's/\\.json//'); MSG=\"${RECIPE:-update recipes}\"; git add -A && git commit -m \"add $MSG\" && git push origin main; fi",
+            "statusMessage": "Committing and pushing recipe...",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
