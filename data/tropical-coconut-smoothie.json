@@ -1,0 +1,68 @@
+{
+  "id": "tropical-coconut-smoothie",
+  "title": "Tropical Coconut",
+  "subtitle": "Freezer Smoothie Pack",
+  "description": "A rich tropical smoothie with pineapple, mango, and coconut milk — slightly higher carbs for flavor variety, with protein from cottage cheese and Greek yogurt.",
+  "category": "Smoothies",
+  "tags": ["Smoothie", "Freezer Prep", "High Protein", "Tropical"],
+  "servings": 1,
+  "macros": {
+    "calories": 390,
+    "protein": 19,
+    "carbs": 28,
+    "fat": 18,
+    "fiber": 7
+  },
+  "ingredientGroups": [
+    {
+      "label": "Bag Contents (Freeze)",
+      "ingredients": [
+        { "amount": "½", "unit": "cup", "name": "frozen pineapple chunks", "base": 0.5 },
+        { "amount": "¼", "unit": "cup", "name": "frozen mango chunks", "base": 0.25 },
+        { "amount": "1", "unit": "cup", "name": "baby spinach", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "unsweetened shredded coconut", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "chia seeds", "base": 1 }
+      ]
+    },
+    {
+      "label": "Add at Blend Time",
+      "ingredients": [
+        { "amount": "½", "unit": "cup", "name": "lite canned coconut milk", "base": 0.5 },
+        { "amount": "½", "unit": "cup", "name": "unsweetened almond milk", "base": 0.5 },
+        { "amount": "¼", "unit": "cup", "name": "full-fat cottage cheese", "base": 0.25 },
+        { "amount": "¼", "unit": "cup", "name": "plain full-fat Greek yogurt", "base": 0.25 }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Prep the bag",
+      "text": "Add all bag contents to a zip-lock or reusable freezer bag:",
+      "bullets": [
+        "½ cup frozen pineapple chunks",
+        "¼ cup frozen mango chunks",
+        "1 cup baby spinach",
+        "1 tbsp unsweetened shredded coconut",
+        "1 tbsp chia seeds"
+      ],
+      "note": "Seal and freeze. These keep for up to 3 months."
+    },
+    {
+      "title": "Blend",
+      "text": "Add the frozen bag contents to a blender, then pour in:",
+      "bullets": [
+        "½ cup lite canned coconut milk",
+        "½ cup unsweetened almond milk",
+        "¼ cup full-fat cottage cheese",
+        "¼ cup plain full-fat Greek yogurt"
+      ],
+      "note": "Blend on high for 45–60 seconds until completely smooth. The chia seeds will thicken it slightly."
+    }
+  ],
+  "notes": [
+    { "title": "Carbs", "body": "28g net carbs is higher than most of the other smoothies — the pineapple and mango drive that. Worth it for flavor variety; just account for it if you're watching intake closely." },
+    { "title": "Coconut milk", "body": "Use lite canned coconut milk, not the carton kind. It blends in creamier and has a more distinct coconut flavor without spiking the fat too high." },
+    { "title": "Freezer Prep", "body": "Make a week's worth of bags at once. The chia seeds go in the bag dry — they'll hydrate when you blend." },
+    { "title": "Color", "body": "The spinach will shift the color greenish-yellow. Flavor stays tropical." }
+  ]
+}

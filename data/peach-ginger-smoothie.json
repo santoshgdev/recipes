@@ -1,0 +1,66 @@
+{
+  "id": "peach-ginger-smoothie",
+  "title": "Peach Ginger",
+  "subtitle": "Freezer Smoothie Pack",
+  "description": "A creamy, anti-inflammatory freezer smoothie with peach, spinach, ginger, and turmeric — packed with protein from cottage cheese and Greek yogurt.",
+  "category": "Smoothies",
+  "tags": ["Smoothie", "Freezer Prep", "High Protein", "Anti-Inflammatory"],
+  "servings": 1,
+  "macros": {
+    "calories": 330,
+    "protein": 20,
+    "carbs": 21,
+    "fat": 13,
+    "fiber": 6
+  },
+  "ingredientGroups": [
+    {
+      "label": "Bag Contents (Freeze)",
+      "ingredients": [
+        { "amount": "¾", "unit": "cup", "name": "frozen peach slices", "base": 0.75 },
+        { "amount": "1", "unit": "cup", "name": "baby spinach", "base": 1 },
+        { "amount": "¼", "unit": "tsp", "name": "ground ginger", "base": 0.25 },
+        { "amount": "¼", "unit": "tsp", "name": "ground turmeric", "base": 0.25 },
+        { "amount": "1", "unit": "tbsp", "name": "ground flaxseed", "base": 1 }
+      ]
+    },
+    {
+      "label": "Add at Blend Time",
+      "ingredients": [
+        { "amount": "1¼", "unit": "cups", "name": "unsweetened almond milk", "base": 1.25 },
+        { "amount": "¼", "unit": "cup", "name": "full-fat cottage cheese", "base": 0.25 },
+        { "amount": "¼", "unit": "cup", "name": "plain full-fat Greek yogurt", "base": 0.25 }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Prep the bag",
+      "text": "Add all bag contents to a zip-lock or reusable freezer bag:",
+      "bullets": [
+        "¾ cup frozen peach slices",
+        "1 cup baby spinach",
+        "¼ tsp ground ginger",
+        "¼ tsp ground turmeric",
+        "1 tbsp ground flaxseed"
+      ],
+      "note": "Seal and freeze. These keep for up to 3 months."
+    },
+    {
+      "title": "Blend",
+      "text": "Add the frozen bag contents to a blender, then pour in:",
+      "bullets": [
+        "1¼ cups unsweetened almond milk",
+        "¼ cup full-fat cottage cheese",
+        "¼ cup plain full-fat Greek yogurt"
+      ],
+      "note": "Blend on high for 45–60 seconds until completely smooth. Cottage cheese blends invisible — don't skip it."
+    }
+  ],
+  "notes": [
+    { "title": "Protein", "body": "The cottage cheese + Greek yogurt combo hits 20g protein without protein powder. Full-fat versions blend creamier and keep you fuller." },
+    { "title": "Color", "body": "The spinach will turn it green-ish — that's normal and doesn't affect the flavor at all." },
+    { "title": "Freezer Prep", "body": "Make a week's worth of bags at once. Pull one out each morning — no measuring, no mess." },
+    { "title": "Carbs", "body": "21g is net carbs (total carbs minus fiber). Total carbs with fiber is 27g." }
+  ]
+}

@@ -198,7 +198,8 @@
 
   function render() {
     document.title = recipe.title;
-    document.getElementById('eyebrow').textContent = `Meal Prep · ${recipe.servings} Containers`;
+    const servingWord = recipe.servings === 1 ? 'serving' : 'servings';
+    document.getElementById('eyebrow').textContent = `${recipe.category || 'Recipe'} · ${recipe.servings} ${servingWord}`;
     document.getElementById('title').textContent = recipe.title;
     document.getElementById('subtitle').textContent = recipe.subtitle;
     document.getElementById('desc').textContent = recipe.description;

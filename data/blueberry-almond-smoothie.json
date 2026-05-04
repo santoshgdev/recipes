@@ -1,0 +1,66 @@
+{
+  "id": "blueberry-almond-smoothie",
+  "title": "Blueberry Almond",
+  "subtitle": "Freezer Smoothie Pack",
+  "description": "A mellow, low-GI smoothie built around blueberries and almond butter — high in healthy fats and fiber, with protein from cottage cheese and Greek yogurt.",
+  "category": "Smoothies",
+  "tags": ["Smoothie", "Freezer Prep", "High Protein", "Low GI"],
+  "servings": 1,
+  "macros": {
+    "calories": 380,
+    "protein": 22,
+    "carbs": 20,
+    "fat": 20,
+    "fiber": 9
+  },
+  "ingredientGroups": [
+    {
+      "label": "Bag Contents (Freeze)",
+      "ingredients": [
+        { "amount": "¾", "unit": "cup", "name": "frozen blueberries", "base": 0.75 },
+        { "amount": "1", "unit": "cup", "name": "baby spinach", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "hemp seeds", "base": 1 },
+        { "amount": "1", "unit": "tbsp", "name": "chia seeds", "base": 1 }
+      ]
+    },
+    {
+      "label": "Add at Blend Time",
+      "ingredients": [
+        { "amount": "1", "unit": "cup", "name": "unsweetened almond milk", "base": 1 },
+        { "amount": "¼", "unit": "cup", "name": "full-fat cottage cheese", "base": 0.25 },
+        { "amount": "¼", "unit": "cup", "name": "plain full-fat Greek yogurt", "base": 0.25 },
+        { "amount": "1", "unit": "tbsp", "name": "almond butter", "base": 1 }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Prep the bag",
+      "text": "Add all bag contents to a zip-lock or reusable freezer bag:",
+      "bullets": [
+        "¾ cup frozen blueberries",
+        "1 cup baby spinach",
+        "1 tbsp hemp seeds",
+        "1 tbsp chia seeds"
+      ],
+      "note": "Seal and freeze. These keep for up to 3 months."
+    },
+    {
+      "title": "Blend",
+      "text": "Add the frozen bag contents to a blender, then add:",
+      "bullets": [
+        "1 cup unsweetened almond milk",
+        "¼ cup full-fat cottage cheese",
+        "¼ cup plain full-fat Greek yogurt",
+        "1 tbsp almond butter"
+      ],
+      "note": "Blend on high for 45–60 seconds until completely smooth. The chia and hemp seeds add body — it'll be thicker than it looks."
+    }
+  ],
+  "notes": [
+    { "title": "Low GI", "body": "Blueberries have one of the lowest glycemic indexes of any fruit. Combined with the fat and fiber here, this is one of the steadiest blood sugar options in the rotation." },
+    { "title": "Almond butter", "body": "Add it at blend time, not in the bag — it doesn't freeze well and can clump. One tablespoon is enough; it punches above its weight on flavor and fat." },
+    { "title": "Fiber", "body": "9g fiber is the highest in the smoothie lineup. The chia seeds, hemp seeds, and blueberries all contribute — keeps you full well past breakfast." },
+    { "title": "Freezer Prep", "body": "Make a week's worth of bags at once. Hemp and chia go in the bag dry." }
+  ]
+}
