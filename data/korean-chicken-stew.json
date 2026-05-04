@@ -88,13 +88,15 @@
         "1 inch fresh ginger, grated",
         "2 tbsp fine gochugaru"
       ],
-      "note": "Cook about 2 minutes until intensely fragrant."
+      "note": "Cook about 2 minutes until intensely fragrant.",
+      "timer": 120
     },
     {
       "title": "Sear chicken",
       "text": "Add the chicken thighs (2.3 lb) and sear for 2–3 minutes, stirring a few times.",
       "bullets": [],
-      "note": ""
+      "note": "",
+      "timer": 150
     },
     {
       "title": "Build the stew",
@@ -115,13 +117,15 @@
       "title": "Pressure cook",
       "text": "Lock the lid and pressure cook on High for 8 minutes. Let pressure naturally release for 5 minutes, then quick release the rest.",
       "bullets": [],
-      "note": ""
+      "note": "",
+      "timer": 480
     },
     {
       "title": "Reduce the sauce",
       "text": "Turn Sauté back on and simmer uncovered for 7–9 minutes, stirring occasionally, until the sauce reduces into a thick glaze.",
       "bullets": [],
-      "note": "With kimchi adding extra liquid, give it the full 9 minutes if needed."
+      "note": "With kimchi adding extra liquid, give it the full 9 minutes if needed.",
+      "timer": 480
     },
     {
       "title": "The finisher",

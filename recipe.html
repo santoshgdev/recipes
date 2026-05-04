@@ -106,6 +106,35 @@
   .step-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--orange); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
   .step-note { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 8px; padding: 8px 12px; border-left: 2px solid var(--border); }
 
+  /* TIMERS */
+  .step-timer { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .timer-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .timer-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .timer-btn.running { border-color: var(--orange); color: var(--orange); background: rgba(224,123,57,0.08); }
+  .timer-btn.done { border-color: var(--green); color: var(--green); background: rgba(74,124,89,0.1); }
+  .timer-reset {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    display: none;
+    transition: color 0.15s;
+  }
+  .timer-reset:hover { color: var(--text); }
+
   /* NOTES */
   .note-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 16px 20px; margin-bottom: 12px; }
   .note-card-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
@@ -255,6 +284,12 @@
             </ul>
           ` : ''}
           ${s.note ? `<div class="step-note">${s.note}</div>` : ''}
+          ${s.timer ? `
+            <div class="step-timer" data-seconds="${s.timer}" data-step="${i}">
+              <button class="timer-btn" onclick="toggleTimer(this)">⏱ ${fmtTime(s.timer)}</button>
+              <button class="timer-reset" onclick="resetTimer(this)">↺ reset</button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `).join('');
@@ -289,6 +324,59 @@
 
   function toggleStep(n) {
     document.getElementById('step-' + n).classList.toggle('done');
+  }
+
+  const timerState = {};
+
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    return `${m}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  function toggleTimer(btn) {
+    const wrap = btn.closest('.step-timer');
+    const key = wrap.dataset.step;
+    const dur = parseInt(wrap.dataset.seconds);
+    const reset = wrap.querySelector('.timer-reset');
+
+    if (!timerState[key]) timerState[key] = { remaining: dur, interval: null };
+    const st = timerState[key];
+
+    if (st.interval) {
+      clearInterval(st.interval);
+      st.interval = null;
+      btn.textContent = `⏱ ${fmtTime(st.remaining)}`;
+      btn.classList.remove('running');
+    } else {
+      btn.classList.add('running');
+      reset.style.display = 'inline';
+      st.interval = setInterval(() => {
+        st.remaining--;
+        if (st.remaining <= 0) {
+          clearInterval(st.interval);
+          st.interval = null;
+          btn.textContent = '✓ Done';
+          btn.classList.remove('running');
+          btn.classList.add('done');
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        } else {
+          btn.textContent = `⏸ ${fmtTime(st.remaining)}`;
+        }
+      }, 1000);
+      btn.textContent = `⏸ ${fmtTime(st.remaining)}`;
+    }
+  }
+
+  function resetTimer(resetBtn) {
+    const wrap = resetBtn.closest('.step-timer');
+    const key = wrap.dataset.step;
+    const dur = parseInt(wrap.dataset.seconds);
+    const btn = wrap.querySelector('.timer-btn');
+    const st = timerState[key];
+    if (st) { clearInterval(st.interval); st.interval = null; st.remaining = dur; }
+    btn.textContent = `⏱ ${fmtTime(dur)}`;
+    btn.classList.remove('running', 'done');
+    resetBtn.style.display = 'none';
   }
 </script>
 </body>

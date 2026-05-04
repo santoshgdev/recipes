@@ -92,13 +92,15 @@
         "1 tsp smoked paprika",
         "½ tsp cumin"
       ],
-      "note": "Cook about 2 minutes until fragrant and spices have bloomed in the oil."
+      "note": "Cook about 2 minutes until fragrant and spices have bloomed in the oil.",
+      "timer": 120
     },
     {
       "title": "Sear chicken",
       "text": "Add the chicken thighs (2.3 lb) and sear for 2–3 minutes, stirring a few times.",
       "bullets": [],
-      "note": ""
+      "note": "",
+      "timer": 150
     },
     {
       "title": "Build the stew",
@@ -121,13 +123,15 @@
       "title": "Pressure cook",
       "text": "Lock the lid and pressure cook on High for 8 minutes. Let pressure naturally release for 5 minutes, then quick release the rest.",
       "bullets": [],
-      "note": ""
+      "note": "",
+      "timer": 480
     },
     {
       "title": "Reduce the sauce",
       "text": "Turn Sauté back on and simmer uncovered for 7–9 minutes, stirring occasionally. The fire roasted tomatoes help the sauce thicken faster — watch for a thick, glossy consistency.",
       "bullets": [],
-      "note": ""
+      "note": "",
+      "timer": 480
     },
     {
       "title": "The finisher",
@@ -152,7 +156,8 @@
       "title": "Fried rice at serving time",
       "text": "Heat a pan on medium-high with a little neutral oil. Add one portion of cold rice and stew together and press down slightly. Fry until the bottom starts to crisp — about 3 minutes. Make a well in the center, crack in 1–2 eggs, let them set halfway, then fold everything together loosely. Top with fresh kimchi and serve immediately.",
       "bullets": [],
-      "note": "Don't microwave this one — the fried rice method is the move."
+      "note": "Don't microwave this one — the fried rice method is the move.",
+      "timer": 180
     }
   ],
   "notes": [
