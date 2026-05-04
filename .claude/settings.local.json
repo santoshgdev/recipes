@@ -8,7 +8,8 @@
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
       "Bash(git commit *)",
-      "Bash(grep -E \"\\\\.\\(tsx?|json\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx?|json\\)$\")",
+      "mcp__63670304-943d-4748-bd5d-5b2d262e744a__list_projects"
     ]
   }
 }
