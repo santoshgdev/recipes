@@ -149,8 +149,21 @@ const port = process.env.PORT ? parseInt(process.env.PORT) : null;
 
 if (port) {
   // HTTP mode for claude.ai / Cloud Run
+  const apiKey = process.env.MCP_API_KEY;
+
   const app = express();
   app.use(express.json());
+
+  if (apiKey) {
+    app.use((req, res, next) => {
+      const auth = req.headers["authorization"];
+      if (auth !== `Bearer ${apiKey}`) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+      next();
+    });
+  }
 
   const sessions = new Map<string, StreamableHTTPServerTransport>();
 
