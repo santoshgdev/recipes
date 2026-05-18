@@ -1,11 +1,10 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, type QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { z } from "zod";
 import express from "express";
-import { randomUUID } from "node:crypto";
 
 const projectId = process.env.FIREBASE_PROJECT_ID;
 if (!projectId) throw new Error("FIREBASE_PROJECT_ID env var is required");
@@ -154,54 +153,33 @@ if (port) {
   const app = express();
   app.use(express.json());
 
-  if (apiKey) {
-    app.use((req, res, next) => {
-      if (req.query.api_key !== apiKey) {
-        res.status(401).json({ error: "Unauthorized" });
-        return;
-      }
-      next();
-    });
-  }
-
-  const sessions = new Map<string, StreamableHTTPServerTransport>();
-
-  app.post("/mcp", async (req, res) => {
-    const sessionId = req.headers["mcp-session-id"] as string | undefined;
-
-    if (sessionId && sessions.has(sessionId)) {
-      await sessions.get(sessionId)!.handleRequest(req, res, req.body);
+  const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (apiKey && req.query.api_key !== apiKey) {
+      res.status(401).json({ error: "Unauthorized" });
       return;
     }
+    next();
+  };
 
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: () => randomUUID(),
-    });
+  const sessions = new Map<string, SSEServerTransport>();
+
+  app.get("/sse", authMiddleware, async (req, res) => {
+    const transport = new SSEServerTransport("/messages", res);
+    sessions.set(transport.sessionId, transport);
+    transport.onclose = () => sessions.delete(transport.sessionId);
     const s = new McpServer({ name: "recipes", version: "1.0.0" });
     registerTools(s);
     await s.connect(transport);
-    transport.onclose = () => sessions.delete(transport.sessionId!);
-    sessions.set(transport.sessionId!, transport);
-    await transport.handleRequest(req, res, req.body);
   });
 
-  app.get("/mcp", async (req, res) => {
-    const sessionId = req.headers["mcp-session-id"] as string | undefined;
-    if (!sessionId || !sessions.has(sessionId)) {
-      res.status(400).json({ error: "Missing or invalid session ID" });
+  app.post("/messages", async (req, res) => {
+    const sessionId = req.query.sessionId as string;
+    const transport = sessions.get(sessionId);
+    if (!transport) {
+      res.status(404).json({ error: "Session not found" });
       return;
     }
-    await sessions.get(sessionId)!.handleRequest(req, res);
-  });
-
-  app.delete("/mcp", async (req, res) => {
-    const sessionId = req.headers["mcp-session-id"] as string | undefined;
-    if (sessionId && sessions.has(sessionId)) {
-      await sessions.get(sessionId)!.handleRequest(req, res);
-      sessions.delete(sessionId);
-    } else {
-      res.status(404).json({ error: "Session not found" });
-    }
+    await transport.handlePostMessage(req, res);
   });
 
   app.listen(port, () => {
