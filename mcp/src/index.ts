@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, type QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { z } from "zod";
@@ -169,25 +169,12 @@ if (port) {
     next();
   };
 
-  const sessions = new Map<string, SSEServerTransport>();
-
-  app.get("/sse", authMiddleware, async (req, res) => {
-    const transport = new SSEServerTransport("/messages", res);
-    sessions.set(transport.sessionId, transport);
-    transport.onclose = () => sessions.delete(transport.sessionId);
+  app.all("/sse", authMiddleware, async (req, res) => {
+    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
     const s = new McpServer({ name: "recipes", version: "1.0.0" });
     registerTools(s);
     await s.connect(transport);
-  });
-
-  app.post("/messages", async (req, res) => {
-    const sessionId = req.query.sessionId as string;
-    const transport = sessions.get(sessionId);
-    if (!transport) {
-      res.status(404).json({ error: "Session not found" });
-      return;
-    }
-    await transport.handlePostMessage(req, res);
+    await transport.handleRequest(req, res, req.body);
   });
 
   app.listen(port, () => {
