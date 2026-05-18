@@ -153,6 +153,14 @@ if (port) {
   const app = express();
   app.use(express.json());
 
+  app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") { res.sendStatus(204); return; }
+    next();
+  });
+
   const authMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (apiKey && req.query.api_key !== apiKey) {
       res.status(401).json({ error: "Unauthorized" });
