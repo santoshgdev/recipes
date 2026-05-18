@@ -38,12 +38,14 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Authenticate Docker to Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
       - name: Build and push image
         working-directory: mcp
         run: |
-          gcloud builds submit . \
-            --tag ${{ env.IMAGE }}:${{ github.sha }} \
-            --project ${{ env.PROJECT_ID }}
+          docker build -t ${{ env.IMAGE }}:${{ github.sha }} .
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         run: |
