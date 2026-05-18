@@ -1,8 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, type QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { z } from "zod";
+import express from "express";
+import { randomUUID } from "node:crypto";
 
 const projectId = process.env.FIREBASE_PROJECT_ID;
 if (!projectId) throw new Error("FIREBASE_PROJECT_ID env var is required");
@@ -63,82 +66,139 @@ const RecipeSchema = z.object({
   notes: z.array(NoteSchema).default([]).describe("End-of-recipe tips shown on the Notes tab"),
 });
 
-// ── Server ───────────────────────────────────────────────────────────────────
+// ── Tool registration ────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "recipes", version: "1.0.0" });
+function registerTools(server: McpServer) {
+  server.tool(
+    "list_recipes",
+    "List all recipes with their IDs, titles, categories, and protein content",
+    {},
+    async () => {
+      const snapshot = await db.collection(COLLECTION).orderBy("category").get();
+      const list = snapshot.docs.map((doc: QueryDocumentSnapshot) => {
+        const d = doc.data();
+        return { id: doc.id, title: d.title, category: d.category, subtitle: d.subtitle, protein: d.macros?.protein };
+      });
+      return { content: [{ type: "text", text: JSON.stringify(list, null, 2) }] };
+    },
+  );
 
-server.tool(
-  "list_recipes",
-  "List all recipes with their IDs, titles, categories, and protein content",
-  {},
-  async () => {
-    const snapshot = await db.collection(COLLECTION).orderBy("category").get();
-    const list = snapshot.docs.map((doc: QueryDocumentSnapshot) => {
-      const d = doc.data();
-      return { id: doc.id, title: d.title, category: d.category, subtitle: d.subtitle, protein: d.macros?.protein };
+  server.tool(
+    "get_recipe",
+    "Get the full JSON of a recipe by its ID",
+    { id: z.string().describe("Recipe ID, e.g. 'korean-chicken-stew'") },
+    async ({ id }) => {
+      const doc = await db.collection(COLLECTION).doc(id).get();
+      if (!doc.exists) {
+        return { content: [{ type: "text", text: `Recipe '${id}' not found` }], isError: true };
+      }
+      return { content: [{ type: "text", text: JSON.stringify(doc.data(), null, 2) }] };
+    },
+  );
+
+  server.tool(
+    "create_recipe",
+    "Create a new recipe. The site updates immediately — no deploy needed. The 'id' must be a unique URL slug. Each ingredient needs both 'amount' (display string like '2.5' or '½') and 'base' (the raw number for the serving scaler).",
+    { recipe: RecipeSchema },
+    async ({ recipe }) => {
+      const ref = db.collection(COLLECTION).doc(recipe.id);
+      const existing = await ref.get();
+      if (existing.exists) {
+        return {
+          content: [{ type: "text", text: `Recipe '${recipe.id}' already exists. Use update_recipe to modify it.` }],
+          isError: true,
+        };
+      }
+      await ref.set(recipe);
+      return { content: [{ type: "text", text: `Created '${recipe.id}' — visible on the site immediately.` }] };
+    },
+  );
+
+  server.tool(
+    "update_recipe",
+    "Update specific fields of an existing recipe. Only include fields you want to change — unspecified fields are preserved.",
+    {
+      id: z.string().describe("Recipe ID to update"),
+      updates: RecipeSchema.partial().omit({ id: true }),
+    },
+    async ({ id, updates }) => {
+      const ref = db.collection(COLLECTION).doc(id);
+      const doc = await ref.get();
+      if (!doc.exists) {
+        return { content: [{ type: "text", text: `Recipe '${id}' not found` }], isError: true };
+      }
+      await ref.set(updates, { merge: true });
+      return { content: [{ type: "text", text: `Updated '${id}'` }] };
+    },
+  );
+
+  server.tool(
+    "delete_recipe",
+    "Permanently delete a recipe by ID",
+    { id: z.string().describe("Recipe ID to delete") },
+    async ({ id }) => {
+      await db.collection(COLLECTION).doc(id).delete();
+      return { content: [{ type: "text", text: `Deleted '${id}'` }] };
+    },
+  );
+}
+
+// ── Transport ────────────────────────────────────────────────────────────────
+
+const port = process.env.PORT ? parseInt(process.env.PORT) : null;
+
+if (port) {
+  // HTTP mode for claude.ai / Cloud Run
+  const app = express();
+  app.use(express.json());
+
+  const sessions = new Map<string, StreamableHTTPServerTransport>();
+
+  app.post("/mcp", async (req, res) => {
+    const sessionId = req.headers["mcp-session-id"] as string | undefined;
+
+    if (sessionId && sessions.has(sessionId)) {
+      await sessions.get(sessionId)!.handleRequest(req, res, req.body);
+      return;
+    }
+
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: () => randomUUID(),
     });
-    return { content: [{ type: "text", text: JSON.stringify(list, null, 2) }] };
-  },
-);
+    const s = new McpServer({ name: "recipes", version: "1.0.0" });
+    registerTools(s);
+    await s.connect(transport);
+    transport.onclose = () => sessions.delete(transport.sessionId!);
+    sessions.set(transport.sessionId!, transport);
+    await transport.handleRequest(req, res, req.body);
+  });
 
-server.tool(
-  "get_recipe",
-  "Get the full JSON of a recipe by its ID",
-  { id: z.string().describe("Recipe ID, e.g. 'korean-chicken-stew'") },
-  async ({ id }) => {
-    const doc = await db.collection(COLLECTION).doc(id).get();
-    if (!doc.exists) {
-      return { content: [{ type: "text", text: `Recipe '${id}' not found` }], isError: true };
+  app.get("/mcp", async (req, res) => {
+    const sessionId = req.headers["mcp-session-id"] as string | undefined;
+    if (!sessionId || !sessions.has(sessionId)) {
+      res.status(400).json({ error: "Missing or invalid session ID" });
+      return;
     }
-    return { content: [{ type: "text", text: JSON.stringify(doc.data(), null, 2) }] };
-  },
-);
+    await sessions.get(sessionId)!.handleRequest(req, res);
+  });
 
-server.tool(
-  "create_recipe",
-  "Create a new recipe. The site updates immediately — no deploy needed. The 'id' must be a unique URL slug. Each ingredient needs both 'amount' (display string like '2.5' or '½') and 'base' (the raw number for the serving scaler).",
-  { recipe: RecipeSchema },
-  async ({ recipe }) => {
-    const ref = db.collection(COLLECTION).doc(recipe.id);
-    const existing = await ref.get();
-    if (existing.exists) {
-      return {
-        content: [{ type: "text", text: `Recipe '${recipe.id}' already exists. Use update_recipe to modify it.` }],
-        isError: true,
-      };
+  app.delete("/mcp", async (req, res) => {
+    const sessionId = req.headers["mcp-session-id"] as string | undefined;
+    if (sessionId && sessions.has(sessionId)) {
+      await sessions.get(sessionId)!.handleRequest(req, res);
+      sessions.delete(sessionId);
+    } else {
+      res.status(404).json({ error: "Session not found" });
     }
-    await ref.set(recipe);
-    return { content: [{ type: "text", text: `Created '${recipe.id}' — visible on the site immediately.` }] };
-  },
-);
+  });
 
-server.tool(
-  "update_recipe",
-  "Update specific fields of an existing recipe. Only include fields you want to change — unspecified fields are preserved.",
-  {
-    id: z.string().describe("Recipe ID to update"),
-    updates: RecipeSchema.partial().omit({ id: true }),
-  },
-  async ({ id, updates }) => {
-    const ref = db.collection(COLLECTION).doc(id);
-    const doc = await ref.get();
-    if (!doc.exists) {
-      return { content: [{ type: "text", text: `Recipe '${id}' not found` }], isError: true };
-    }
-    await ref.set(updates, { merge: true });
-    return { content: [{ type: "text", text: `Updated '${id}'` }] };
-  },
-);
-
-server.tool(
-  "delete_recipe",
-  "Permanently delete a recipe by ID",
-  { id: z.string().describe("Recipe ID to delete") },
-  async ({ id }) => {
-    await db.collection(COLLECTION).doc(id).delete();
-    return { content: [{ type: "text", text: `Deleted '${id}'` }] };
-  },
-);
-
-const transport = new StdioServerTransport();
-await server.connect(transport);
+  app.listen(port, () => {
+    console.log(`MCP server listening on port ${port}`);
+  });
+} else {
+  // Stdio mode for Claude Code
+  const server = new McpServer({ name: "recipes", version: "1.0.0" });
+  registerTools(server);
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
