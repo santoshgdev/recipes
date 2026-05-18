@@ -8,151 +8,237 @@
 <style>
   :root {
     --bg: #0c0c0c;
+    --surface: #141414;
+    --surface2: #1a1a1a;
     --line: #1e1e1e;
     --text: #f0f0f0;
     --muted: #555;
     --dim: #2a2a2a;
     --accent: #d4a843;
+    --accent-dim: rgba(212,168,67,0.1);
+    --green: #52a46e;
+    --green-dim: rgba(82,164,110,0.1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
 
-  header {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 72px 40px 64px;
+  /* ── App shell ── */
+  .app-bar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 18px 28px;
     border-bottom: 1px solid var(--line);
+    background: var(--bg);
   }
-  header h1 {
+  .app-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(52px, 10vw, 96px);
+    font-size: 22px;
     font-weight: 700;
-    line-height: 0.95;
-    letter-spacing: -2px;
+    letter-spacing: -0.5px;
     color: var(--text);
   }
-  .header-meta {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  .header-by {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .header-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
-  .header-desc { font-size: 13px; color: var(--muted); font-style: italic; }
+  .app-byline { font-size: 12px; color: var(--muted); }
 
-  main { max-width: 900px; margin: 0 auto; padding: 0 40px 96px; }
+  .split { display: flex; flex: 1; overflow: hidden; }
 
-  .cat-block { padding-top: 56px; }
+  /* ── Left: list pane ── */
+  .list-pane {
+    width: 320px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 0 0 48px;
+  }
+  .list-pane::-webkit-scrollbar { width: 3px; }
+  .list-pane::-webkit-scrollbar-thumb { background: var(--dim); }
+
+  .cat-block { padding-top: 32px; }
   .cat-label {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 500;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--muted);
-    margin-bottom: 4px;
+    padding: 0 20px 8px;
+    display: block;
   }
 
   .recipe-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 18px 0;
+    gap: 12px;
+    padding: 12px 20px;
     border-top: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.1s;
     text-decoration: none;
     color: inherit;
-    position: relative;
   }
   .recipe-row:last-child { border-bottom: 1px solid var(--line); }
+  .recipe-row:hover { background: var(--surface); }
+  .recipe-row.active { background: var(--surface2); border-left: 2px solid var(--accent); padding-left: 18px; }
 
-  .row-left { flex: 1; min-width: 0; }
+  .row-info { flex: 1; min-width: 0; }
   .row-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(20px, 3.5vw, 30px);
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.1;
-    transition: color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
   }
-  .recipe-row:hover .row-title { color: var(--accent); }
   .row-subtitle {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--muted);
-    margin-top: 4px;
+    font-style: italic;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+  .row-protein { font-size: 11px; font-weight: 500; color: var(--accent); flex-shrink: 0; }
+  .row-thumb {
+    width: 44px; height: 36px; object-fit: cover; flex-shrink: 0;
+    border-radius: 3px; filter: brightness(0.85);
+  }
+  .row-thumb-placeholder { width: 44px; height: 36px; background: var(--line); flex-shrink: 0; border-radius: 3px; }
 
-  .row-right {
+  /* ── Right: detail pane ── */
+  .detail-pane {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+  .detail-pane::-webkit-scrollbar { width: 3px; }
+  .detail-pane::-webkit-scrollbar-thumb { background: var(--dim); }
+
+  .detail-empty {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-shrink: 0;
-  }
-  .row-protein {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    white-space: nowrap;
-  }
-  .row-kcal {
-    font-size: 12px;
+    justify-content: center;
+    height: 100%;
     color: var(--muted);
-    white-space: nowrap;
+    font-size: 13px;
+    font-style: italic;
   }
-  .row-thumb {
-    width: 72px;
-    height: 56px;
-    object-fit: cover;
-    flex-shrink: 0;
-    display: block;
-    filter: brightness(0.9);
-    transition: filter 0.2s;
-  }
-  .recipe-row:hover .row-thumb { filter: brightness(1); }
-  .row-thumb-placeholder {
-    width: 72px;
-    height: 56px;
-    flex-shrink: 0;
-    background: var(--line);
-  }
-  .row-arrow {
-    font-size: 18px;
-    color: var(--dim);
-    transition: color 0.15s, transform 0.15s;
-  }
-  .recipe-row:hover .row-arrow { color: var(--accent); transform: translateX(4px); }
 
-  @media (max-width: 600px) {
-    header { padding: 48px 24px 40px; }
-    main { padding: 0 24px 64px; }
-    .row-kcal { display: none; }
-    .row-title { font-size: 22px; }
+  /* ── Recipe detail styles ── */
+  .hero-image { width: 100%; height: 260px; object-fit: cover; display: block; filter: brightness(0.85); }
+
+  .hero { padding: 32px 40px 28px; border-bottom: 1px solid var(--line); }
+  .hero-eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 38px); font-weight: 700; color: var(--text); line-height: 1.05; letter-spacing: -0.5px; }
+  .hero-subtitle { font-size: 15px; color: var(--muted); margin-top: 6px; font-style: italic; }
+  .hero-desc { font-size: 13px; color: var(--muted); margin-top: 16px; line-height: 1.75; }
+  .hero-tags { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+  .tag { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid var(--dim); color: var(--muted); padding: 3px 9px; }
+
+  .macros-bar { border-bottom: 1px solid var(--line); padding: 20px 40px; background: var(--surface2); }
+  .macros-label { font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .macros-row { display: flex; }
+  .macro-cell { flex: 1; padding-left: 16px; border-left: 1px solid var(--line); }
+  .macro-cell:first-child { padding-left: 0; border-left: none; }
+  .macro-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .macro-value sup { font-family: 'Inter', sans-serif; font-size: 10px; color: var(--muted); font-weight: 400; }
+  .macro-label { font-size: 9px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .macro-cell.highlight .macro-value { color: var(--accent); }
+
+  .servings-bar { padding: 14px 40px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; }
+  .servings-label { font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .servings-ctrl { display: flex; align-items: center; border: 1px solid var(--dim); }
+  .s-btn { background: none; border: none; color: var(--muted); width: 32px; height: 32px; font-size: 18px; cursor: pointer; transition: color 0.15s; }
+  .s-btn:hover { color: var(--text); }
+  .s-val { font-family: 'Playfair Display', serif; font-size: 18px; min-width: 40px; text-align: center; border-left: 1px solid var(--dim); border-right: 1px solid var(--dim); height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text); }
+  .servings-note { font-size: 12px; color: var(--muted); }
+
+  .tabs { display: flex; border-bottom: 1px solid var(--line); padding: 0 40px; }
+  .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding: 14px 14px; cursor: pointer; transition: color 0.15s; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .content { max-width: 680px; padding: 36px 40px 80px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .ing-group { margin-bottom: 32px; }
+  .ing-group-title { font-size: 9px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding-bottom: 10px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
+  .ing-row { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .ing-row:last-child { border-bottom: none; }
+  .ing-amt { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--accent); min-width: 48px; text-align: right; flex-shrink: 0; }
+  .ing-unit { font-size: 10px; font-weight: 500; color: var(--muted); min-width: 28px; flex-shrink: 0; }
+  .ing-name { color: var(--text); flex: 1; }
+  .ing-note { font-size: 11px; color: var(--muted); font-style: italic; flex-shrink: 0; }
+
+  .step { display: grid; grid-template-columns: 44px 1fr; }
+  .step-left { display: flex; flex-direction: column; align-items: center; padding-top: 2px; }
+  .step-num { width: 28px; height: 28px; border: 1px solid var(--dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; z-index: 1; transition: all 0.15s; flex-shrink: 0; }
+  .step-num:hover { border-color: var(--accent); color: var(--accent); }
+  .step.done .step-num { background: var(--green); border-color: var(--green); color: #fff; }
+  .step-line { width: 1px; background: var(--line); flex: 1; margin: 6px 0; min-height: 16px; }
+  .step:last-child .step-line { display: none; }
+  .step-body { padding: 0 0 32px 14px; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--text); margin-bottom: 8px; line-height: 1.2; cursor: pointer; transition: color 0.15s; }
+  .step-title:hover { color: var(--accent); }
+  .step.done .step-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--dim); }
+  .step-text { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 6px; }
+  .step-bullets { list-style: none; margin: 10px 0; }
+  .step-bullets li { font-size: 14px; color: var(--text); padding: 6px 0 6px 20px; position: relative; line-height: 1.55; border-bottom: 1px solid var(--line); }
+  .step-bullets li:last-child { border-bottom: none; }
+  .step-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--dim); font-size: 11px; }
+  .step-note { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 10px; padding: 8px 14px; border-left: 2px solid var(--dim); }
+
+  .step-timer { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .timer-btn { font-size: 11px; font-weight: 500; letter-spacing: 1px; background: none; border: 1px solid var(--dim); color: var(--muted); padding: 6px 14px; cursor: pointer; transition: all 0.15s; }
+  .timer-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .timer-btn.running { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .timer-btn.done { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+  .timer-reset { font-size: 11px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px 6px; display: none; transition: color 0.15s; }
+  .timer-reset:hover { color: var(--text); }
+
+  .note-card { border-top: 1px solid var(--line); padding: 20px 0; }
+  .note-card:last-child { border-bottom: 1px solid var(--line); }
+  .note-card-title { font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .note-card p { font-size: 14px; color: var(--muted); line-height: 1.8; }
+  .note-card strong { color: var(--text); font-weight: 500; }
+
+  /* ── Mobile: single column ── */
+  @media (max-width: 767px) {
+    .split { flex-direction: column; overflow: visible; }
+    .list-pane { width: 100%; border-right: none; overflow-y: visible; padding-bottom: 16px; }
+    .detail-pane { display: none; }
+    .app-bar { padding: 16px 20px; }
+    .recipe-row { padding: 12px 20px; }
+    .cat-label { padding: 0 20px 8px; }
+    .cat-block { padding-top: 24px; }
+    /* on mobile, rows are anchor tags that navigate */
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>Recipes</h1>
-  <div class="header-meta">
-    <span class="header-by">Santosh's Kitchen</span>
-    <div class="header-dot"></div>
-    <span class="header-desc">Meal prepped. High protein.</span>
+
+<div class="app-bar">
+  <span class="app-title">Recipes</span>
+  <span class="app-byline">Santosh's Kitchen · High protein · Meal prepped</span>
+</div>
+
+<div class="split">
+  <div class="list-pane" id="list-pane">
+    <div style="padding: 32px 20px; color: var(--muted); font-size: 13px; font-style: italic;">Loading...</div>
   </div>
-</header>
-<main id="main">
-  <div style="color:var(--muted);font-size:13px;padding-top:48px">Loading...</div>
-</main>
+
+  <div class="detail-pane" id="detail-pane">
+    <div class="detail-empty">← Select a recipe</div>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-  import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+  import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
   const FIREBASE_CONFIG = {
     apiKey:            "AIzaSyCdWDvObKrSCfqeHsbENsEjJMTVdRGh2mk",
@@ -166,50 +252,305 @@
   const app = initializeApp(FIREBASE_CONFIG);
   const db  = getFirestore(app);
   const categoryOrder = ['Dinner', 'Smoothies', 'Breakfast', 'Lunch', 'Snack'];
+  const isDesktop = () => window.innerWidth >= 768;
 
-  function renderRecipes(recipes) {
+  // ── Recipe list ──────────────────────────────────────────────────────────────
+
+  let allRecipes = [];
+  let activeId = null;
+  let recipeState = {}; // per-recipe: { servings, doneSteps, timerState }
+
+  function getState(id, baseServings) {
+    if (!recipeState[id]) recipeState[id] = { servings: baseServings, doneSteps: new Set(), timerState: {} };
+    return recipeState[id];
+  }
+
+  try {
+    const snapshot = await getDocs(query(collection(db, 'recipes'), orderBy('category')));
+    allRecipes = snapshot.docs.map(d => d.data());
+    renderList(allRecipes);
+  } catch (err) {
+    document.getElementById('list-pane').innerHTML =
+      `<div style="padding:32px 20px;color:var(--muted);font-size:13px">Error: ${err.message}</div>`;
+  }
+
+  function renderList(recipes) {
     const grouped = {};
     for (const r of recipes) {
       if (!grouped[r.category]) grouped[r.category] = [];
       grouped[r.category].push(r);
     }
-    const categories = categoryOrder.filter(c => grouped[c]);
-    for (const c of Object.keys(grouped)) if (!categories.includes(c)) categories.push(c);
+    const cats = categoryOrder.filter(c => grouped[c]);
+    for (const c of Object.keys(grouped)) if (!cats.includes(c)) cats.push(c);
 
-    document.getElementById('main').innerHTML = categories.map(cat => `
+    document.getElementById('list-pane').innerHTML = cats.map(cat => `
       <div class="cat-block">
-        <div class="cat-label">${cat}</div>
-        ${grouped[cat].map(r => `
-          <a class="recipe-row" href="recipe.html?id=${r.id}">
-            <div class="row-left">
-              <div class="row-title">${r.title}</div>
-              ${r.subtitle ? `<div class="row-subtitle">${r.subtitle}</div>` : ''}
-            </div>
-            <div class="row-right">
-              <span class="row-protein">${r.macros?.protein ?? 0}g</span>
-              <span class="row-kcal">${r.macros?.calories ?? 0} kcal</span>
-              ${r.imageUrl
-                ? `<img class="row-thumb" src="${r.imageUrl}" alt="${r.title}" loading="lazy">`
-                : `<div class="row-thumb-placeholder"></div>`}
-              <span class="row-arrow">→</span>
-            </div>
-          </a>
+        <span class="cat-label">${cat}</span>
+        ${grouped[cat].map(r => {
+          const thumb = r.imageUrl
+            ? `<img class="row-thumb" src="${r.imageUrl}" alt="">`
+            : `<div class="row-thumb-placeholder"></div>`;
+          if (isDesktop()) {
+            return `
+              <div class="recipe-row" data-id="${r.id}" onclick="selectRecipe('${r.id}')">
+                <div class="row-info">
+                  <div class="row-title">${r.title}</div>
+                  ${r.subtitle ? `<div class="row-subtitle">${r.subtitle}</div>` : ''}
+                </div>
+                <span class="row-protein">${r.macros?.protein ?? 0}g</span>
+                ${thumb}
+              </div>`;
+          } else {
+            return `
+              <a class="recipe-row" href="recipe.html?id=${r.id}">
+                <div class="row-info">
+                  <div class="row-title">${r.title}</div>
+                  ${r.subtitle ? `<div class="row-subtitle">${r.subtitle}</div>` : ''}
+                </div>
+                <span class="row-protein">${r.macros?.protein ?? 0}g</span>
+                ${thumb}
+              </a>`;
+          }
+        }).join('')}
+      </div>
+    `).join('');
+  }
+
+  // ── Recipe detail ─────────────────────────────────────────────────────────────
+
+  window.selectRecipe = async function(id) {
+    if (!isDesktop()) return;
+
+    // Update active state in list
+    document.querySelectorAll('.recipe-row').forEach(r => r.classList.remove('active'));
+    const row = document.querySelector(`.recipe-row[data-id="${id}"]`);
+    if (row) row.classList.add('active');
+
+    activeId = id;
+    const pane = document.getElementById('detail-pane');
+
+    let recipe = allRecipes.find(r => r.id === id);
+    if (!recipe) {
+      pane.innerHTML = `<div class="detail-empty">Loading...</div>`;
+      const snap = await getDoc(doc(db, 'recipes', id));
+      if (!snap.exists()) { pane.innerHTML = `<div class="detail-empty">Not found</div>`; return; }
+      recipe = snap.data();
+    }
+
+    const state = getState(id, recipe.servings);
+    pane.innerHTML = renderDetail(recipe, state);
+    pane.scrollTop = 0;
+  };
+
+  function renderDetail(recipe, state) {
+    const m = recipe.macros;
+    return `
+      ${recipe.imageUrl ? `<img class="hero-image" src="${recipe.imageUrl}" alt="${recipe.title}">` : ''}
+      <div class="hero">
+        <div class="hero-eyebrow">${recipe.category} · ${recipe.servings} serving${recipe.servings !== 1 ? 's' : ''}</div>
+        <h1>${recipe.title}</h1>
+        ${recipe.subtitle ? `<div class="hero-subtitle">${recipe.subtitle}</div>` : ''}
+        ${recipe.description ? `<div class="hero-desc">${recipe.description}</div>` : ''}
+        ${recipe.tags?.length ? `<div class="hero-tags">${recipe.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="macros-bar">
+        <div class="macros-label">Nutrition · per serving</div>
+        <div class="macros-row">
+          <div class="macro-cell"><div class="macro-value">${m.calories}<sup>kcal</sup></div><div class="macro-label">Calories</div></div>
+          <div class="macro-cell highlight"><div class="macro-value">${m.protein}<sup>g</sup></div><div class="macro-label">Protein</div></div>
+          <div class="macro-cell"><div class="macro-value">${m.carbs}<sup>g</sup></div><div class="macro-label">Carbs</div></div>
+          <div class="macro-cell"><div class="macro-value">${m.fat}<sup>g</sup></div><div class="macro-label">Fat</div></div>
+          <div class="macro-cell"><div class="macro-value">${m.fiber}<sup>g</sup></div><div class="macro-label">Fiber</div></div>
+        </div>
+      </div>
+      <div class="servings-bar">
+        <span class="servings-label">Servings</span>
+        <div class="servings-ctrl">
+          <button class="s-btn" onclick="changeServings('${recipe.id}', -1, ${recipe.servings})">−</button>
+          <div class="s-val" id="s-val-${recipe.id}">${state.servings}</div>
+          <button class="s-btn" onclick="changeServings('${recipe.id}', 1, ${recipe.servings})">+</button>
+        </div>
+        <span class="servings-note" id="s-note-${recipe.id}">${state.servings} container${state.servings !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('ingredients', this, '${recipe.id}')">Ingredients</button>
+        <button class="tab-btn" onclick="showTab('steps', this, '${recipe.id}')">Steps</button>
+        <button class="tab-btn" onclick="showTab('notes', this, '${recipe.id}')">Notes</button>
+      </div>
+      <div class="content">
+        <div id="panel-ingredients-${recipe.id}" class="panel active">${renderIngredients(recipe, state)}</div>
+        <div id="panel-steps-${recipe.id}" class="panel">${renderSteps(recipe, state)}</div>
+        <div id="panel-notes-${recipe.id}" class="panel">${renderNotes(recipe)}</div>
+      </div>
+    `;
+  }
+
+  // ── Ingredients ──────────────────────────────────────────────────────────────
+
+  function fmt(val) {
+    if (typeof val === 'string') return val;
+    if (val === Math.round(val)) return val.toString();
+    const fracs = [[0.25,'¼'],[0.333,'⅓'],[0.5,'½'],[0.667,'⅔'],[0.75,'¾']];
+    const whole = Math.floor(val), frac = val - whole;
+    for (const [f, sym] of fracs) if (Math.abs(frac - f) < 0.05) return (whole > 0 ? whole : '') + sym;
+    return Math.round(val * 10) / 10;
+  }
+
+  function renderIngredients(recipe, state) {
+    const ratio = state.servings / recipe.servings;
+    return recipe.ingredientGroups.map(g => `
+      <div class="ing-group">
+        <div class="ing-group-title">${g.label}</div>
+        ${g.ingredients.map(i => `
+          <div class="ing-row">
+            <span class="ing-amt" data-base="${i.base}">${fmt(i.base * ratio)}</span>
+            <span class="ing-unit">${i.unit || ''}</span>
+            <span class="ing-name">${i.name}</span>
+            ${i.note ? `<span class="ing-note">${i.note}</span>` : ''}
+          </div>
         `).join('')}
       </div>
     `).join('');
   }
 
-  try {
-    const snapshot = await getDocs(query(collection(db, 'recipes'), orderBy('category')));
-    const recipes = snapshot.docs.map(d => d.data());
-    if (!recipes.length) {
-      document.getElementById('main').innerHTML = '<div style="color:var(--muted);font-size:13px;padding-top:48px">No recipes yet.</div>';
-    } else {
-      renderRecipes(recipes);
-    }
-  } catch (err) {
-    document.getElementById('main').innerHTML = `<div style="color:var(--muted);font-size:13px;padding-top:48px">Error: ${err.message}</div>`;
+  window.changeServings = function(id, delta, base) {
+    const state = getState(id, base);
+    state.servings = Math.max(1, state.servings + delta);
+    document.getElementById(`s-val-${id}`).textContent = state.servings;
+    document.getElementById(`s-note-${id}`).textContent = `${state.servings} container${state.servings !== 1 ? 's' : ''}`;
+    const recipe = allRecipes.find(r => r.id === id);
+    if (recipe) document.getElementById(`panel-ingredients-${id}`).innerHTML = renderIngredients(recipe, state);
+  };
+
+  // ── Steps ────────────────────────────────────────────────────────────────────
+
+  function fmtTime(s) { return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; }
+
+  function renderSteps(recipe, state) {
+    return recipe.steps.map((s, i) => {
+      const done = state.doneSteps.has(i);
+      const ts = state.timerState[i];
+      let timerHtml = '';
+      if (s.timer) {
+        const remaining = ts ? ts.remaining : s.timer;
+        const running = ts?.running ?? false;
+        const isDone = remaining === 0;
+        const label = isDone ? '✓ Done' : (running ? `⏸ ${fmtTime(remaining)}` : `⏱ ${fmtTime(remaining)}`);
+        timerHtml = `
+          <div class="step-timer" data-seconds="${s.timer}" data-step="${i}" data-rid="${recipe.id}">
+            <button class="timer-btn${running ? ' running' : ''}${isDone ? ' done' : ''}" onclick="toggleTimer(this)">${label}</button>
+            <button class="timer-reset" onclick="resetTimer(this)" style="display:${ts && !isDone ? 'inline' : 'none'}">↺ reset</button>
+          </div>`;
+      }
+      return `
+        <div class="step${done ? ' done' : ''}" id="step-${recipe.id}-${i}">
+          <div class="step-left">
+            <div class="step-num" onclick="toggleStep('${recipe.id}', ${i})">${i + 1}</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-title" onclick="toggleStep('${recipe.id}', ${i})">${s.title}</div>
+            ${s.text ? `<p class="step-text">${s.text}</p>` : ''}
+            ${s.bullets?.length ? `<ul class="step-bullets">${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+            ${s.note ? `<div class="step-note">${s.note}</div>` : ''}
+            ${timerHtml}
+          </div>
+        </div>`;
+    }).join('');
   }
+
+  window.toggleStep = function(rid, i) {
+    const recipe = allRecipes.find(r => r.id === rid);
+    if (!recipe) return;
+    const state = getState(rid, recipe.servings);
+    state.doneSteps.has(i) ? state.doneSteps.delete(i) : state.doneSteps.add(i);
+    document.getElementById(`step-${rid}-${i}`)?.classList.toggle('done');
+  };
+
+  // ── Timers ───────────────────────────────────────────────────────────────────
+
+  const intervals = {};
+
+  window.toggleTimer = function(btn) {
+    const wrap = btn.closest('.step-timer');
+    const stepIdx = parseInt(wrap.dataset.step);
+    const rid = wrap.dataset.rid;
+    const dur = parseInt(wrap.dataset.seconds);
+    const resetBtn = wrap.querySelector('.timer-reset');
+    const key = `${rid}-${stepIdx}`;
+
+    const recipe = allRecipes.find(r => r.id === rid);
+    const state = getState(rid, recipe?.servings ?? 1);
+    if (!state.timerState[stepIdx]) state.timerState[stepIdx] = { remaining: dur, running: false };
+    const ts = state.timerState[stepIdx];
+
+    if (ts.running) {
+      clearInterval(intervals[key]); delete intervals[key];
+      ts.running = false;
+      btn.textContent = `⏱ ${fmtTime(ts.remaining)}`;
+      btn.classList.remove('running');
+    } else {
+      ts.running = true;
+      btn.classList.add('running');
+      resetBtn.style.display = 'inline';
+      intervals[key] = setInterval(() => {
+        ts.remaining--;
+        if (ts.remaining <= 0) {
+          ts.remaining = 0; ts.running = false;
+          clearInterval(intervals[key]); delete intervals[key];
+          btn.textContent = '✓ Done';
+          btn.classList.remove('running'); btn.classList.add('done');
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        } else {
+          btn.textContent = `⏸ ${fmtTime(ts.remaining)}`;
+        }
+      }, 1000);
+      btn.textContent = `⏸ ${fmtTime(ts.remaining)}`;
+    }
+  };
+
+  window.resetTimer = function(resetBtn) {
+    const wrap = resetBtn.closest('.step-timer');
+    const stepIdx = parseInt(wrap.dataset.step);
+    const rid = wrap.dataset.rid;
+    const dur = parseInt(wrap.dataset.seconds);
+    const key = `${rid}-${stepIdx}`;
+    const btn = wrap.querySelector('.timer-btn');
+
+    clearInterval(intervals[key]); delete intervals[key];
+    const recipe = allRecipes.find(r => r.id === rid);
+    const state = getState(rid, recipe?.servings ?? 1);
+    state.timerState[stepIdx] = { remaining: dur, running: false };
+
+    btn.textContent = `⏱ ${fmtTime(dur)}`;
+    btn.classList.remove('running', 'done');
+    resetBtn.style.display = 'none';
+  };
+
+  // ── Notes ─────────────────────────────────────────────────────────────────────
+
+  function renderNotes(recipe) {
+    if (!recipe.notes?.length) return '<div style="color:var(--muted);font-size:13px;font-style:italic">No notes.</div>';
+    return recipe.notes.map(n => `
+      <div class="note-card">
+        <div class="note-card-title">${n.title}</div>
+        <p>${n.body}</p>
+      </div>
+    `).join('');
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────────
+
+  window.showTab = function(name, btn, rid) {
+    const pane = document.getElementById('detail-pane');
+    pane.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    pane.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`panel-${name}-${rid}`)?.classList.add('active');
+    btn.classList.add('active');
+  };
+
+  // Re-render list on resize so click behavior updates
+  window.addEventListener('resize', () => renderList(allRecipes));
 </script>
 </body>
 </html>
