@@ -12,6 +12,7 @@ resource "google_project_service" "services" {
     "firestore.googleapis.com",
     "firebase.googleapis.com",
     "firebaserules.googleapis.com",
+    "firebaseappcheck.googleapis.com",
   ])
 
   project            = google_project.recipes.project_id
