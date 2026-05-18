@@ -1,5 +1,4 @@
 import FirebaseFirestore
-import Observation
 
 @Observable
 class RecipeStore {

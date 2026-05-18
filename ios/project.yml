@@ -1,0 +1,42 @@
+name: Recipes
+options:
+  bundleIdPrefix: com.santosh
+  deploymentTarget:
+    iOS: "17.0"
+
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: "11.0.0"
+
+targets:
+  Recipes:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Recipes
+    dependencies:
+      - package: Firebase
+        product: FirebaseFirestore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.santosh.recipes
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        ENABLE_HARDENED_RUNTIME: YES
+    info:
+      path: Recipes/Info.plist
+      properties:
+        CFBundleDisplayName: Recipes
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes:
+          - remote-notification
+        NSUserNotificationUsageDescription: "Used to notify you when a cooking timer finishes."
+    entitlements:
+      path: Recipes/Recipes.entitlements
+      properties:
+        aps-environment: development
