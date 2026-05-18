@@ -156,8 +156,7 @@ if (port) {
 
   if (apiKey) {
     app.use((req, res, next) => {
-      const auth = req.headers["authorization"];
-      if (auth !== `Bearer ${apiKey}`) {
+      if (req.query.api_key !== apiKey) {
         res.status(401).json({ error: "Unauthorized" });
         return;
       }
