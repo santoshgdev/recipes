@@ -1,7 +1,6 @@
 resource "google_project" "recipes" {
-  name            = var.project_name
-  project_id      = var.project_id
-  billing_account = var.billing_account
+  name       = var.project_name
+  project_id = var.project_id
 
   lifecycle {
     prevent_destroy = true

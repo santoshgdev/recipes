@@ -1,8 +1,3 @@
-variable "billing_account" {
-  description = "GCP billing account ID (find at console.cloud.google.com/billing)"
-  type        = string
-}
-
 variable "project_id" {
   description = "GCP project ID — must be globally unique (e.g. 'santosh-recipes-12345')"
   type        = string
