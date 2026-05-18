@@ -1,10 +1,8 @@
 #!/usr/bin/env node
-// Diagnoses Firebase App Check configuration
-//   node scripts/diagnose-appcheck.mjs
-
 import { initializeApp, applicationDefault } from "firebase-admin/app";
 
 const PROJECT_ID = "recipes-496701";
+const PROJECT_NUMBER = "151018575958";
 const APP_ID = "1:151018575958:web:5b1c87caa5b1dacdf383f7";
 const SITE_KEY = "6Ldzru8sAAAAAIeY_EjkmK1DS8K15OxwfPAMrMRp";
 
@@ -12,41 +10,33 @@ const app = initializeApp({ credential: applicationDefault(), projectId: PROJECT
 const tokenResult = await app.options.credential.getAccessToken();
 const token = tokenResult.access_token;
 
-console.log("✓ Got ADC access token\n");
+const headers = {
+  Authorization: `Bearer ${token}`,
+  "Content-Type": "application/json",
+  "x-goog-user-project": PROJECT_ID,
+};
 
-async function call(label, url, opts = {}) {
+async function call(label, url) {
   console.log(`── ${label} ──`);
-  const res = await fetch(url, {
-    ...opts,
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", ...opts.headers },
-  });
+  const res = await fetch(url, { headers });
   const body = await res.text();
   console.log(`   Status: ${res.status}`);
-  try {
-    console.log(`   Body: ${JSON.stringify(JSON.parse(body), null, 2).slice(0, 600)}`);
-  } catch {
-    console.log(`   Body: ${body.slice(0, 200)}`);
-  }
+  try { console.log(JSON.stringify(JSON.parse(body), null, 2).slice(0, 800)); }
+  catch { console.log(body.slice(0, 300)); }
   console.log();
-  return { status: res.status, body };
 }
 
-// 1. Check reCAPTCHA v3 config stored in App Check
-await call(
-  "1. reCAPTCHA v3 config in App Check",
-  `https://firebaseappcheck.googleapis.com/v1beta/projects/${PROJECT_ID}/apps/${APP_ID}/recaptchaV3Config`,
+// Check if API is enabled
+console.log("── 0. API enabled check ──");
+const apiRes = await fetch(
+  `https://serviceusage.googleapis.com/v1/projects/${PROJECT_NUMBER}/services/firebaseappcheck.googleapis.com`,
+  { headers }
 );
+const apiBody = await apiRes.json();
+console.log(`   Status: ${apiRes.status}, state: ${apiBody?.state ?? apiBody?.error?.message}`);
+console.log();
 
-// 2. Check enforcement state for Firestore
-await call(
-  "2. Firestore enforcement state",
-  `https://firebaseappcheck.googleapis.com/v1beta/projects/${PROJECT_ID}/services/firestore.googleapis.com`,
-);
+await call("1. reCAPTCHA v3 config", `https://firebaseappcheck.googleapis.com/v1/projects/${PROJECT_ID}/apps/${APP_ID}/recaptchaV3Config`);
+await call("2. Firestore enforcement", `https://firebaseappcheck.googleapis.com/v1/projects/${PROJECT_ID}/services/firestore.googleapis.com`);
 
-// 3. List all registered apps
-await call(
-  "3. All App Check apps",
-  `https://firebaseappcheck.googleapis.com/v1beta/projects/${PROJECT_ID}/apps`,
-);
-
-console.log(`Expected site key in code: ${SITE_KEY}`);
+console.log(`Site key in code: ${SITE_KEY}`);
