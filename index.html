@@ -4,130 +4,136 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Recipes</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #111110;
-    --surface: #1a1918;
-    --surface-hover: #212020;
-    --border: #2a2826;
-    --text: #f0ebe4;
-    --muted: #6b6258;
-    --subtle: #3a3632;
-    --accent: #e9a84c;
-    --accent-dim: rgba(233,168,76,0.12);
-    --green: #52a46e;
+    --bg: #0c0c0c;
+    --line: #1e1e1e;
+    --text: #f0f0f0;
+    --muted: #555;
+    --dim: #2a2a2a;
+    --accent: #d4a843;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
   header {
-    padding: 60px 32px 52px;
-    border-bottom: 1px solid var(--border);
-    max-width: 760px;
+    max-width: 900px;
     margin: 0 auto;
-  }
-  .eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
+    padding: 72px 40px 64px;
+    border-bottom: 1px solid var(--line);
   }
   header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(40px, 8vw, 68px);
+    font-size: clamp(52px, 10vw, 96px);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -2px;
     color: var(--text);
-    line-height: 1;
-    letter-spacing: -1px;
   }
-  header p {
-    margin-top: 14px;
-    font-size: 14px;
+  .header-meta {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .header-by {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     color: var(--muted);
-    max-width: 360px;
-    line-height: 1.6;
   }
+  .header-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
+  .header-desc { font-size: 13px; color: var(--muted); font-style: italic; }
 
-  main { max-width: 760px; margin: 0 auto; padding: 48px 32px 96px; }
+  main { max-width: 900px; margin: 0 auto; padding: 0 40px 96px; }
 
-  .category-section { margin-bottom: 52px; }
-  .section-label {
+  .cat-block { padding-top: 56px; }
+  .cat-label {
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--subtle);
-    margin-bottom: 16px;
+    color: var(--muted);
+    margin-bottom: 4px;
   }
 
-  .recipe-grid { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); }
-
-  .recipe-card {
-    display: block;
+  .recipe-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
     text-decoration: none;
-    background: var(--surface);
-    padding: 24px 28px;
-    transition: background 0.15s;
+    color: inherit;
+    transition: none;
     position: relative;
   }
-  .recipe-card:hover { background: var(--surface-hover); }
+  .recipe-row:last-child { border-bottom: 1px solid var(--line); }
 
-  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-  .card-title {
+  .row-left { flex: 1; min-width: 0; }
+  .row-title {
     font-family: 'Playfair Display', serif;
-    font-size: 21px;
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 700;
     color: var(--text);
-    line-height: 1.2;
+    line-height: 1.1;
+    transition: color 0.15s;
   }
-  .card-subtitle {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 3px;
+  .recipe-row:hover .row-title { color: var(--accent); }
+  .row-subtitle {
+    font-family: 'Playfair Display', serif;
     font-style: italic;
-  }
-  .card-arrow {
-    font-size: 16px;
-    color: var(--subtle);
-    transition: color 0.15s, transform 0.15s;
-    flex-shrink: 0;
+    font-size: 14px;
+    color: var(--muted);
     margin-top: 4px;
   }
-  .recipe-card:hover .card-arrow { color: var(--accent); transform: translateX(3px); }
 
-  .card-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.65;
-    margin-bottom: 16px;
+  .row-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
   }
-
-  .card-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  .card-macros { display: flex; gap: 20px; }
-  .macro-item { font-size: 12px; color: var(--muted); }
-  .macro-item b { color: var(--text); font-weight: 500; }
-  .macro-protein { font-size: 12px; color: var(--accent); font-weight: 500; }
-
-  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .card-tag {
-    font-size: 10px;
-    letter-spacing: 0.5px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
+  .row-protein {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .row-kcal {
+    font-size: 12px;
     color: var(--muted);
-    padding: 3px 9px;
+    white-space: nowrap;
+  }
+  .row-arrow {
+    font-size: 18px;
+    color: var(--dim);
+    transition: color 0.15s, transform 0.15s;
+  }
+  .recipe-row:hover .row-arrow { color: var(--accent); transform: translateX(4px); }
+
+  @media (max-width: 600px) {
+    header { padding: 48px 24px 40px; }
+    main { padding: 0 24px 64px; }
+    .row-kcal { display: none; }
+    .row-title { font-size: 22px; }
   }
 </style>
 </head>
 <body>
 <header>
-  <div class="eyebrow">Santosh's Kitchen</div>
   <h1>Recipes</h1>
-  <p>Meal prepped. High protein. Built to keep you out of DoorDash.</p>
+  <div class="header-meta">
+    <span class="header-by">Santosh's Kitchen</span>
+    <div class="header-dot"></div>
+    <span class="header-desc">Meal prepped. High protein.</span>
+  </div>
 </header>
 <main id="main">
-  <div style="color:var(--muted);font-size:13px">Loading...</div>
+  <div style="color:var(--muted);font-size:13px;padding-top:48px">Loading...</div>
 </main>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
@@ -156,29 +162,21 @@
     for (const c of Object.keys(grouped)) if (!categories.includes(c)) categories.push(c);
 
     document.getElementById('main').innerHTML = categories.map(cat => `
-      <div class="category-section">
-        <div class="section-label">${cat}</div>
-        <div class="recipe-grid">
-          ${grouped[cat].map(r => `
-            <a class="recipe-card" href="recipe.html?id=${r.id}">
-              <div class="card-top">
-                <div>
-                  <div class="card-title">${r.title}</div>
-                  ${r.subtitle ? `<div class="card-subtitle">${r.subtitle}</div>` : ''}
-                </div>
-                <div class="card-arrow">→</div>
-              </div>
-              ${r.description ? `<div class="card-desc">${r.description}</div>` : ''}
-              <div class="card-bottom">
-                <div class="card-macros">
-                  <span class="macro-protein">${r.macros?.protein ?? 0}g protein</span>
-                  <span class="macro-item"><b>${r.macros?.calories ?? 0}</b> kcal</span>
-                </div>
-                <div class="card-tags">${(r.tags||[]).map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
-              </div>
-            </a>
-          `).join('')}
-        </div>
+      <div class="cat-block">
+        <div class="cat-label">${cat}</div>
+        ${grouped[cat].map(r => `
+          <a class="recipe-row" href="recipe.html?id=${r.id}">
+            <div class="row-left">
+              <div class="row-title">${r.title}</div>
+              ${r.subtitle ? `<div class="row-subtitle">${r.subtitle}</div>` : ''}
+            </div>
+            <div class="row-right">
+              <span class="row-protein">${r.macros?.protein ?? 0}g</span>
+              <span class="row-kcal">${r.macros?.calories ?? 0} kcal</span>
+              <span class="row-arrow">→</span>
+            </div>
+          </a>
+        `).join('')}
       </div>
     `).join('');
   }
@@ -187,12 +185,12 @@
     const snapshot = await getDocs(query(collection(db, 'recipes'), orderBy('category')));
     const recipes = snapshot.docs.map(d => d.data());
     if (!recipes.length) {
-      document.getElementById('main').innerHTML = '<div style="color:var(--muted);font-size:13px">No recipes yet.</div>';
+      document.getElementById('main').innerHTML = '<div style="color:var(--muted);font-size:13px;padding-top:48px">No recipes yet.</div>';
     } else {
       renderRecipes(recipes);
     }
   } catch (err) {
-    document.getElementById('main').innerHTML = `<div style="color:var(--muted);font-size:13px">Failed to load: ${err.message}</div>`;
+    document.getElementById('main').innerHTML = `<div style="color:var(--muted);font-size:13px;padding-top:48px">Error: ${err.message}</div>`;
   }
 </script>
 </body>
