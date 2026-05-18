@@ -41,7 +41,14 @@
   .meta-col { background: var(--surface); }
 
   /* ── Hero ── */
-  .hero { padding: 48px 40px 40px; border-bottom: 1px solid var(--line); }
+  .hero-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.85);
+  }
+  .hero { padding: 32px 40px 40px; border-bottom: 1px solid var(--line); }
   .hero-eyebrow {
     font-size: 10px;
     font-weight: 500;
@@ -260,6 +267,7 @@
 
 <div class="recipe-layout">
   <div class="meta-col">
+    <div id="hero-image-wrap"></div>
     <div class="hero">
       <div class="hero-eyebrow" id="eyebrow">Loading...</div>
       <h1 id="title"></h1>
@@ -350,6 +358,9 @@
     document.getElementById('subtitle').textContent = recipe.subtitle || '';
     document.getElementById('desc').textContent = recipe.description || '';
     document.getElementById('tags').innerHTML = (recipe.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
+    document.getElementById('hero-image-wrap').innerHTML = recipe.imageUrl
+      ? `<img class="hero-image" src="${recipe.imageUrl}" alt="${recipe.title}">`
+      : '';
 
     const m = recipe.macros;
     document.getElementById('macros-bar').style.display = '';

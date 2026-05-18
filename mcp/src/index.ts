@@ -63,6 +63,7 @@ const RecipeSchema = z.object({
   ingredientGroups: z.array(IngredientGroupSchema).min(1).describe("At least one group required — use a single group labeled 'Ingredients' if no natural grouping"),
   steps: z.array(StepSchema).min(1).describe("Full cooking instructions — every step must have a title and text"),
   notes: z.array(NoteSchema).default([]).describe("End-of-recipe tips shown on the Notes tab — use [] if none"),
+  imageUrl: z.string().url().optional().describe("Direct URL to a photo of the finished dish — shown as a thumbnail on the recipe list and full image on the recipe page. Use a high-quality image (landscape, at least 800px wide). Search Unsplash or similar for a fitting food photo."),
 });
 
 // ── Tool registration ────────────────────────────────────────────────────────

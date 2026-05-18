@@ -61,14 +61,13 @@
 
   .recipe-row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 22px 0;
+    padding: 18px 0;
     border-top: 1px solid var(--line);
     text-decoration: none;
     color: inherit;
-    transition: none;
     position: relative;
   }
   .recipe-row:last-child { border-bottom: 1px solid var(--line); }
@@ -76,7 +75,7 @@
   .row-left { flex: 1; min-width: 0; }
   .row-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(22px, 3.5vw, 32px);
+    font-size: clamp(20px, 3.5vw, 30px);
     font-weight: 700;
     color: var(--text);
     line-height: 1.1;
@@ -86,7 +85,7 @@
   .row-subtitle {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--muted);
     margin-top: 4px;
   }
@@ -107,6 +106,22 @@
     font-size: 12px;
     color: var(--muted);
     white-space: nowrap;
+  }
+  .row-thumb {
+    width: 72px;
+    height: 56px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    filter: brightness(0.9);
+    transition: filter 0.2s;
+  }
+  .recipe-row:hover .row-thumb { filter: brightness(1); }
+  .row-thumb-placeholder {
+    width: 72px;
+    height: 56px;
+    flex-shrink: 0;
+    background: var(--line);
   }
   .row-arrow {
     font-size: 18px;
@@ -173,6 +188,9 @@
             <div class="row-right">
               <span class="row-protein">${r.macros?.protein ?? 0}g</span>
               <span class="row-kcal">${r.macros?.calories ?? 0} kcal</span>
+              ${r.imageUrl
+                ? `<img class="row-thumb" src="${r.imageUrl}" alt="${r.title}" loading="lazy">`
+                : `<div class="row-thumb-placeholder"></div>`}
               <span class="row-arrow">→</span>
             </div>
           </a>
