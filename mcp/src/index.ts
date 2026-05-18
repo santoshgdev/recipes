@@ -19,23 +19,23 @@ const COLLECTION = "recipes";
 
 const IngredientSchema = z.object({
   amount: z.string().describe("Display string, e.g. '2.5' or '½'"),
-  unit: z.string().default("").describe("e.g. 'cup', 'tbsp', 'lb', or empty string"),
+  unit: z.string().describe("e.g. 'cup', 'tbsp', 'lb', or '' for unitless (e.g. '2 eggs')"),
   name: z.string(),
-  base: z.number().describe("Numeric base amount used for scaling"),
+  base: z.number().describe("Numeric base amount used for scaling, e.g. 2.5"),
   note: z.string().optional().describe("e.g. 'for finishing', 'cook night before'"),
 });
 
 const IngredientGroupSchema = z.object({
   label: z.string().describe("e.g. 'Protein', 'Vegetables', 'Sauce & Spice'"),
-  ingredients: z.array(IngredientSchema),
+  ingredients: z.array(IngredientSchema).min(1),
 });
 
 const StepSchema = z.object({
   title: z.string().describe("Short imperative title, e.g. 'Sauté aromatics'"),
-  text: z.string().default("").describe("Main instruction paragraph"),
-  bullets: z.array(z.string()).default([]).describe("List items within the step"),
-  note: z.string().default("").describe("Tip or callout shown below the step"),
-  timer: z.number().int().optional().describe("Optional countdown timer in seconds"),
+  text: z.string().describe("Main instruction paragraph — must be a complete sentence or more"),
+  bullets: z.array(z.string()).default([]).describe("Optional sub-steps as bullet points"),
+  note: z.string().default("").describe("Optional tip or callout shown below the step"),
+  timer: z.number().int().optional().describe("Optional countdown timer in seconds, e.g. 300 for 5 min"),
 });
 
 const NoteSchema = z.object({
@@ -44,25 +44,25 @@ const NoteSchema = z.object({
 });
 
 const MacrosSchema = z.object({
-  calories: z.number().int(),
-  protein: z.number().int().describe("grams"),
-  carbs: z.number().int().describe("grams"),
-  fat: z.number().int().describe("grams"),
-  fiber: z.number().int().describe("grams"),
+  calories: z.number().int().describe("Total calories per serving"),
+  protein: z.number().int().describe("Protein in grams per serving"),
+  carbs: z.number().int().describe("Carbohydrates in grams per serving"),
+  fat: z.number().int().describe("Fat in grams per serving"),
+  fiber: z.number().int().describe("Fiber in grams per serving"),
 });
 
 const RecipeSchema = z.object({
   id: z.string().describe("URL-friendly slug — lowercase letters and hyphens only, e.g. 'garlic-lemon-salmon'"),
   title: z.string(),
-  subtitle: z.string().default("").describe("Short flavor note shown in italics, e.g. 'with Kimchi & Lime'"),
-  description: z.string().default("").describe("2–3 sentence description shown on the recipe card"),
-  category: z.enum(["Dinner", "Smoothies", "Breakfast", "Lunch", "Snack"]).default("Dinner"),
-  tags: z.array(z.string()).default([]).describe("e.g. ['Instant Pot', 'Meal Prep', 'High Protein']"),
-  servings: z.number().int().positive().default(1),
+  subtitle: z.string().describe("Short flavor note shown in italics, e.g. 'with Kimchi & Lime'"),
+  description: z.string().describe("2–3 sentence description shown on the recipe card"),
+  category: z.enum(["Dinner", "Smoothies", "Breakfast", "Lunch", "Snack"]),
+  tags: z.array(z.string()).describe("e.g. ['Instant Pot', 'Meal Prep', 'High Protein'] — use [] if none"),
+  servings: z.number().int().positive().describe("Number of servings this recipe makes"),
   macros: MacrosSchema,
-  ingredientGroups: z.array(IngredientGroupSchema).default([]),
-  steps: z.array(StepSchema).default([]),
-  notes: z.array(NoteSchema).default([]).describe("End-of-recipe tips shown on the Notes tab"),
+  ingredientGroups: z.array(IngredientGroupSchema).min(1).describe("At least one group required — use a single group labeled 'Ingredients' if no natural grouping"),
+  steps: z.array(StepSchema).min(1).describe("Full cooking instructions — every step must have a title and text"),
+  notes: z.array(NoteSchema).default([]).describe("End-of-recipe tips shown on the Notes tab — use [] if none"),
 });
 
 // ── Tool registration ────────────────────────────────────────────────────────
