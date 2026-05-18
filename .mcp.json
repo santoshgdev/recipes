@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "recipes": {
+      "command": "node",
+      "args": ["C:/Users/sg/Documents/GitHub/santoshgdev/recipes/mcp/dist/index.js"],
+      "env": {
+        "FIREBASE_PROJECT_ID": "recipes-496701"
+      }
+    }
+  }
+}
