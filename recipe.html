@@ -230,7 +230,24 @@
 
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+  import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+  // ── Paste the output of `terraform output firebase_config` here ──────────
+  const FIREBASE_CONFIG = {
+    apiKey:            "REPLACE_WITH_TERRAFORM_OUTPUT",
+    authDomain:        "REPLACE_WITH_TERRAFORM_OUTPUT",
+    projectId:         "REPLACE_WITH_TERRAFORM_OUTPUT",
+    storageBucket:     "REPLACE_WITH_TERRAFORM_OUTPUT",
+    messagingSenderId: "REPLACE_WITH_TERRAFORM_OUTPUT",
+    appId:             "REPLACE_WITH_TERRAFORM_OUTPUT",
+  };
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db  = getFirestore(app);
+
   let recipe = null;
   let servings = 3;
   let baseServings = 3;
@@ -242,17 +259,23 @@
     window.location.href = 'index.html';
   }
 
-  fetch(`data/${id}.json`)
-    .then(r => r.json())
-    .then(data => {
-      recipe = data;
-      servings = data.servings;
-      baseServings = data.servings;
-      render();
-    })
-    .catch(() => {
+  try {
+    const snap = await getDoc(doc(db, 'recipes', id));
+    if (!snap.exists()) {
       document.getElementById('title').textContent = 'Recipe not found';
-    });
+    } else {
+      recipe = snap.data();
+      servings = recipe.servings;
+      baseServings = recipe.servings;
+      render();
+    }
+  } catch (err) {
+    document.getElementById('title').textContent = 'Failed to load recipe';
+    document.getElementById('eyebrow').textContent = err.message;
+  }
+
+  // expose event handlers to global scope (needed for onclick attributes)
+  Object.assign(window, { changeServings, showTab, toggleStep, toggleTimer, resetTimer });
 
   function fmt(val) {
     if (typeof val === 'string') return val;

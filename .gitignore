@@ -1,0 +1,12 @@
+# MCP server build output and dependencies
+mcp/node_modules/
+mcp/dist/
+
+# Terraform state and downloaded providers
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+
+# Local variable overrides (contains billing account ID)
+terraform/terraform.tfvars
+terraform/*.auto.tfvars

@@ -165,89 +165,74 @@
 <main id="main">
   <div style="color:var(--muted);font-size:13px">Loading...</div>
 </main>
-<script>
-  const recipes = [
-    {
-      id: 'korean-chicken-stew',
-      category: 'Dinner',
-      title: 'Korean Chicken Stew',
-      subtitle: 'with Kimchi & Lime',
-      description: 'A spicy, savory Korean-inspired chicken and vegetable stew over cold rice — built for meal prep with kimchi, fried eggs, and a lime finish.',
-      tags: ['Instant Pot', 'Korean', 'Spicy', 'Meal Prep'],
-      macros: { calories: 645, protein: 53 }
-    },
-    {
-      id: 'smoky-chipotle-korean-chicken-stew',
-      category: 'Dinner',
-      title: 'Smoky Chipotle Korean Chicken Stew',
-      subtitle: 'Korean-Mexican Fusion',
-      description: 'A smoky Korean-Mexican fusion braise with chipotle, gochujang, fire roasted tomatoes, and daikon — finished with lime and served as fried rice.',
-      tags: ['Instant Pot', 'Fusion', 'Smoky', 'Meal Prep'],
-      macros: { calories: 640, protein: 54 }
-    },
-    {
-      id: 'peach-ginger-smoothie',
-      category: 'Smoothies',
-      title: 'Peach Ginger',
-      subtitle: 'Freezer Smoothie Pack',
-      description: 'A creamy, anti-inflammatory freezer smoothie with peach, spinach, ginger, and turmeric — packed with protein from cottage cheese and Greek yogurt.',
-      tags: ['Smoothie', 'Freezer Prep', 'High Protein'],
-      macros: { calories: 330, protein: 20 }
-    },
-    {
-      id: 'tropical-coconut-smoothie',
-      category: 'Smoothies',
-      title: 'Tropical Coconut',
-      subtitle: 'Freezer Smoothie Pack',
-      description: 'A rich tropical smoothie with pineapple, mango, and coconut milk — slightly higher carbs for flavor variety, with protein from cottage cheese and Greek yogurt.',
-      tags: ['Smoothie', 'Freezer Prep', 'High Protein', 'Tropical'],
-      macros: { calories: 390, protein: 19 }
-    },
-    {
-      id: 'blueberry-almond-smoothie',
-      category: 'Smoothies',
-      title: 'Blueberry Almond',
-      subtitle: 'Freezer Smoothie Pack',
-      description: 'A mellow, low-GI smoothie built around blueberries and almond butter — high in healthy fats and fiber, with protein from cottage cheese and Greek yogurt.',
-      tags: ['Smoothie', 'Freezer Prep', 'High Protein', 'Low GI'],
-      macros: { calories: 380, protein: 22 }
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+  import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+  // ── Paste the output of `terraform output firebase_config` here ──────────
+  const FIREBASE_CONFIG = {
+    apiKey:            "REPLACE_WITH_TERRAFORM_OUTPUT",
+    authDomain:        "REPLACE_WITH_TERRAFORM_OUTPUT",
+    projectId:         "REPLACE_WITH_TERRAFORM_OUTPUT",
+    storageBucket:     "REPLACE_WITH_TERRAFORM_OUTPUT",
+    messagingSenderId: "REPLACE_WITH_TERRAFORM_OUTPUT",
+    appId:             "REPLACE_WITH_TERRAFORM_OUTPUT",
+  };
+  // ─────────────────────────────────────────────────────────────────────────
+
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db  = getFirestore(app);
+
+  const categoryOrder = ['Dinner', 'Smoothies', 'Breakfast', 'Lunch', 'Snack'];
+
+  function renderRecipes(recipes) {
+    const grouped = {};
+    for (const r of recipes) {
+      if (!grouped[r.category]) grouped[r.category] = [];
+      grouped[r.category].push(r);
     }
-  ];
 
-  const categoryOrder = ['Dinner', 'Smoothies'];
-  const grouped = {};
-  for (const r of recipes) {
-    if (!grouped[r.category]) grouped[r.category] = [];
-    grouped[r.category].push(r);
-  }
+    const categories = categoryOrder.filter(c => grouped[c]);
+    for (const c of Object.keys(grouped)) {
+      if (!categories.includes(c)) categories.push(c);
+    }
 
-  const categories = categoryOrder.filter(c => grouped[c]);
-  for (const c of Object.keys(grouped)) {
-    if (!categories.includes(c)) categories.push(c);
+    const main = document.getElementById('main');
+    main.innerHTML = categories.map(cat => `
+      <div class="category-section">
+        <div class="section-label">${cat}</div>
+        <div class="recipe-grid">
+          ${grouped[cat].map(r => `
+            <a class="recipe-card" href="recipe.html?id=${r.id}">
+              <div class="card-arrow">→</div>
+              <div class="card-eyebrow">${r.category} · ${r.macros.protein}g protein</div>
+              <div class="card-title">${r.title}</div>
+              <div class="card-subtitle">${r.subtitle || ''}</div>
+              <div class="card-desc">${r.description || ''}</div>
+              <div class="card-meta">
+                <span class="card-macro">Calories <span>${r.macros.calories}</span></span>
+                <span class="card-macro">Protein <span>${r.macros.protein}g</span></span>
+              </div>
+              <div class="card-tags">${(r.tags || []).map(t => `<span class="card-tag">${t}</span>`).join('')}</div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
   }
 
   const main = document.getElementById('main');
-  main.innerHTML = categories.map(cat => `
-    <div class="category-section">
-      <div class="section-label">${cat}</div>
-      <div class="recipe-grid">
-        ${grouped[cat].map(r => `
-          <a class="recipe-card" href="recipe.html?id=${r.id}">
-            <div class="card-arrow">→</div>
-            <div class="card-eyebrow">${r.category} · ${r.macros.protein}g protein</div>
-            <div class="card-title">${r.title}</div>
-            <div class="card-subtitle">${r.subtitle}</div>
-            <div class="card-desc">${r.description}</div>
-            <div class="card-meta">
-              <span class="card-macro">Calories <span>${r.macros.calories}</span></span>
-              <span class="card-macro">Protein <span>${r.macros.protein}g</span></span>
-            </div>
-            <div class="card-tags">${r.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>
-          </a>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+  try {
+    const snapshot = await getDocs(query(collection(db, 'recipes'), orderBy('category')));
+    const recipes = snapshot.docs.map(d => d.data());
+    if (recipes.length === 0) {
+      main.innerHTML = '<div style="color:var(--muted);font-size:13px">No recipes yet.</div>';
+    } else {
+      renderRecipes(recipes);
+    }
+  } catch (err) {
+    main.innerHTML = `<div style="color:var(--muted);font-size:13px">Failed to load recipes: ${err.message}</div>`;
+  }
 </script>
 </body>
 </html>
