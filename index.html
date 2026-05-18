@@ -239,6 +239,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
   import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+  import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js';
 
   const FIREBASE_CONFIG = {
     apiKey:            "AIzaSyCdWDvObKrSCfqeHsbENsEjJMTVdRGh2mk",
@@ -250,6 +251,10 @@
   };
 
   const app = initializeApp(FIREBASE_CONFIG);
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6Ldzru8sAAAAAIeY_EjkmK1DS8K15OxwfPAMrMRp'),
+    isTokenAutoRefreshEnabled: true,
+  });
   const db  = getFirestore(app);
   const categoryOrder = ['Dinner', 'Smoothies', 'Breakfast', 'Lunch', 'Snack'];
   const isDesktop = () => window.innerWidth >= 768;

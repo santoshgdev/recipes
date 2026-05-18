@@ -309,6 +309,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
   import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+  import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app-check.js';
 
   const FIREBASE_CONFIG = {
     apiKey:            "AIzaSyCdWDvObKrSCfqeHsbENsEjJMTVdRGh2mk",
@@ -320,6 +321,10 @@
   };
 
   const app = initializeApp(FIREBASE_CONFIG);
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6Ldzru8sAAAAAIeY_EjkmK1DS8K15OxwfPAMrMRp'),
+    isTokenAutoRefreshEnabled: true,
+  });
   const db  = getFirestore(app);
 
   let recipe = null, servings = 3, baseServings = 3;
